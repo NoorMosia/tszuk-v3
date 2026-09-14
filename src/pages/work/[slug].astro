@@ -21,7 +21,15 @@ const { data } = entry;
 const groupLabel = data.group === 'business' ? 'Business' : 'Personality';
 ---
 
-<Layout title={`${data.name} | tszuk`} description={data.description} image={data.heroImage.src}>
+<Layout
+  title={`${data.name} | tszuk`}
+  description={data.description}
+  image={data.heroImage.src}
+  imageAlt={data.heroImageAlt}
+  imageWidth={data.heroImage.width}
+  imageHeight={data.heroImage.height}
+  ogType="article"
+>
   <StructuredData scope="case-study" entry={entry} />
 
   <article class="case">

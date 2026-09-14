@@ -1,0 +1,29 @@
+# tszuk
+
+> tszuk is a branding studio in Port Elizabeth, South Africa, working under the tagline "a brand that builds". We collaborate with two distinct kinds of clients, businesses and personalities, to build identities that resonate. We treat every engagement as a brand experience, not just a delivery.
+
+## About
+
+- We work with two kinds of clients, kept distinct throughout: **businesses** (companies and organizations) and **personalities** (individuals and public figures).
+- Our work spans strategy, visual identity, brand guidelines, art direction, web design and development, UI/UX, e-commerce experience, and campaign and social direction.
+- The focus is the personal touch and the experience, how a brand looks, feels, and shows up wherever people meet it, not the underlying technology.
+- Founded by Zukisa (Co-Founder & Project Manager) and Mosia (Co-Founder & Systems Director).
+- Based in Port Elizabeth, South Africa. We collaborate with clients wherever they are.
+
+## Pages
+
+- [Home](https://tszuk.co.za/): studio introduction, selected work, how we work, and contact.
+- [About](https://tszuk.co.za/about/): who tszuk is and what we believe.
+- [Founders](https://tszuk.co.za/founders/): the people behind the studio.
+- [Work — Businesses](https://tszuk.co.za/work/businesses/): brand experiences built for companies and organizations.
+- [Work — Personalities](https://tszuk.co.za/work/personalities/): personal brands built for individuals and public figures.
+
+## Contact
+
+- Email: hello@tszuk.co.za
+- Phone / WhatsApp: +27 81 087 0400
+- Location: Port Elizabeth, South Africa
+
+## Sitemap
+
+- [XML sitemap index](https://tszuk.co.za/sitemap-index.xml)
