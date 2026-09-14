@@ -1,0 +1,151 @@
+---
+/**
+ * ProcessSection — process-led replacement for the flat "What We Do" list.
+ *
+ * Presents how tszuk works as ordered phases (Discover, Design, Build, Grow),
+ * each grouping its service items. `summary` renders a condensed version for
+ * the home page; the full version carries more room per phase. Aligned to the
+ * 12-column grid, using the warm-brutalist display type and hard rules.
+ */
+import { PROCESS_PHASES, type ProcessPhase } from '../lib/site';
+
+interface Props {
+  phases?: ProcessPhase[];
+  summary?: boolean;
+  heading?: string;
+  /** Render the component's own heading. Set false when the page supplies one. */
+  showHeading?: boolean;
+}
+
+const {
+  phases = PROCESS_PHASES,
+  summary = false,
+  heading = 'How We Work',
+  showHeading = true,
+} = Astro.props;
+---
+
+<section
+  class:list={['process scroll-reveal', { 'process--summary': summary }]}
+  aria-label={showHeading ? undefined : 'How we work'}
+  aria-labelledby={showHeading ? 'process-heading' : undefined}
+>
+  {showHeading && <h2 class="process__heading" id="process-heading">{heading}</h2>}
+  <ol class="process__list">
+    {
+      phases.map((phase, i) => (
+        <li class="process__phase">
+          <span class="process__num" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h3 class="process__name">{phase.name}</h3>
+          <ul class="process__items">
+            {phase.items.map((item) => (
+              <li class="process__item">{item}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .process {
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+
+  .process__heading {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .process__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--rule-hair) solid var(--color-divider);
+  }
+
+  /* Mobile-first: a clean single-column stack. The number is a small mono
+     label sitting just above the phase name (no awkward empty left column),
+     then the items list comfortably below. The 3-column desktop layout is
+     layered on at 768px. */
+  .process__phase {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: var(--rule-hair) solid var(--color-divider);
+  }
+
+  .process__num {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+  }
+
+  .process__name {
+    font-size: clamp(1.6rem, 4.5vw, 2.85rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  .process__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+  }
+
+  .process__item {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-muted);
+  }
+
+  /* Summary mode: tighter type for the home page. */
+  .process--summary .process__name {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  .process--summary .process__phase {
+    padding-block: clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  @media (min-width: 768px) {
+    /* Desktop: restore the 3-column grid (num | name | items). */
+    .process__phase {
+      display: grid;
+      grid-template-columns: auto minmax(0, 12ch) 1fr;
+      column-gap: clamp(1rem, 4vw, 3rem);
+      row-gap: 0.75rem;
+      align-items: baseline;
+    }
+
+    .process__num {
+      padding-top: 0.7rem;
+    }
+
+    .process__items {
+      grid-column: 3;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.5rem 1.25rem;
+      margin-top: 0;
+      text-align: right;
+    }
+  }
+</style>

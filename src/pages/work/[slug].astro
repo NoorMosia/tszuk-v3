@@ -1,0 +1,233 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import StructuredData from '../../components/StructuredData.astro';
+import ScopeMarker from '../../components/ScopeMarker.astro';
+
+export const getStaticPaths = (async () => {
+  const entries = await getCollection('caseStudies');
+  // Exactly one page per entry; slug = entry id.
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { data } = entry;
+
+const groupLabel = data.group === 'business' ? 'Business' : 'Personality';
+---
+
+<Layout title={`${data.name} | tszuk`} description={data.description} image={data.heroImage.src}>
+  <StructuredData scope="case-study" entry={entry} />
+
+  <article class="case">
+    <header class="case__hero">
+      <p class="case__eyebrow">{groupLabel}</p>
+      <h1 class="case__name">{data.name}</h1>
+    </header>
+
+    <div class="case__hero-image">
+      <Image
+        src={data.heroImage}
+        alt={data.heroImageAlt}
+        width={1080}
+        height={1080}
+        widths={[540, 810, 1080]}
+        sizes="(min-width: 900px) 900px, 100vw"
+        class="case__hero-img"
+        loading="eager"
+      />
+    </div>
+
+    <div class="case__scope">
+      <ScopeMarker scope={data.scope} variant="rows" />
+    </div>
+
+    <div class="case__narrative">
+      <section class="case__chapter" aria-labelledby="case-challenge">
+        <h2 class="case__chapter-title" id="case-challenge">The Challenge</h2>
+        <p class="case__chapter-text">{data.story.challenge}</p>
+      </section>
+      <section class="case__chapter" aria-labelledby="case-approach">
+        <h2 class="case__chapter-title" id="case-approach">Our Approach</h2>
+        <p class="case__chapter-text">{data.story.approach}</p>
+      </section>
+      <section class="case__chapter" aria-labelledby="case-outcome">
+        <h2 class="case__chapter-title" id="case-outcome">The Outcome</h2>
+        <p class="case__chapter-text">{data.story.outcome}</p>
+      </section>
+    </div>
+
+    {
+      data.testimonial && (
+        <figure class="case__testimonial">
+          <blockquote class="case__testimonial-quote">
+            "{data.testimonial.quote}"
+          </blockquote>
+          <figcaption class="case__testimonial-by">
+            {data.testimonial.attribution}
+          </figcaption>
+        </figure>
+      )
+    }
+
+    {
+      data.liveLink && (
+        <div class="case__live">
+          <a
+            class="case__live-link"
+            href={data.liveLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Visit the live project <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      )
+    }
+  </article>
+</Layout>
+
+<style>
+  .case {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: calc(var(--section-padding-mobile) + 1rem) 1.5rem var(--section-padding-mobile);
+    background-color: var(--color-bg);
+  }
+
+  .case__hero {
+    max-width: var(--manifesto-max-width);
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+
+  .case__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .case__name {
+    font-size: clamp(2.25rem, 7vw, 4rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+
+  .case__hero-image {
+    overflow: hidden;
+    border-radius: 0;
+    margin-bottom: 2rem;
+    /* The project images are 1080px squares. Cap the frame near that width so
+       the image is never displayed larger than its native resolution (which
+       was the cause of the soft/pixelated look). Centered within the wider
+       article column. */
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  .case__scope {
+    max-width: var(--manifesto-max-width);
+    margin: 0 auto clamp(3rem, 6vw, 5rem);
+    text-align: left;
+  }
+
+  .case__hero-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* 4:3 crops only a little from the square sources, unlike the old 16:10
+       which cropped heavily and forced upscaling. */
+    aspect-ratio: 4 / 3;
+  }
+
+  .case__narrative {
+    max-width: var(--manifesto-max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .case__chapter-title {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .case__chapter-text {
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
+  .case__testimonial {
+    max-width: var(--manifesto-max-width);
+    margin: clamp(3.5rem, 8vw, 6rem) auto 4rem;
+    padding: 2.5rem;
+    background-color: var(--color-sage);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .case__testimonial-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.25rem;
+  }
+
+  .case__testimonial-by {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  .case__live {
+    text-align: center;
+  }
+
+  .case__live-link {
+    display: inline-block;
+    padding: 0.875rem 2.25rem;
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-radius: 4px;
+    transition:
+      background-color var(--duration-hover) var(--easing),
+      transform var(--duration-hover) var(--easing);
+  }
+
+  .case__live-link:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  @media (min-width: 900px) {
+    .case {
+      padding: calc(var(--section-padding) + 1rem) 2.5rem var(--section-padding);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .case__live-link:hover {
+      transform: none;
+    }
+  }
+</style>

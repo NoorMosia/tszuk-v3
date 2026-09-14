@@ -1,0 +1,106 @@
+---
+/**
+ * Hero — brutalist grid opener (warm brutalist x swiss).
+ *
+ * Big edge-to-edge headline with a label, a supporting line, and a facts
+ * column, aligned to the 12-column grid. Replaces the 3D scroll cover; this is
+ * plain HTML/CSS with no scroll hijacking, so it works with JS off.
+ */
+---
+
+<section class="hero bleed grid-12" aria-label="tszuk, a brand that builds">
+  <p class="hero__eyebrow">// branding &amp; technology studio &middot; Gqeberha, ZA</p>
+  <h1 class="hero__title">A brand that <span>builds.</span></h1>
+  <p class="hero__sub">Bespoke identity and UI/UX for aesthetic brands and personalities who value luxury and restraint, engineered by people who can actually build it.</p>
+  <div class="hero__facts">
+    <div><span>Founded</span><b>2026</b></div>
+    <div><span>Based</span><b>Gqeberha, ZA</b></div>
+    <div><span>Clients</span><b>Companies + Personalities</b></div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    /* main already pads by --nav-height; subtract it so the hero still fills
+       exactly one viewport rather than overflowing past it. */
+    min-height: calc(100vh - var(--nav-height));
+    padding-block: clamp(3rem, 12vh, 9rem);
+    border-bottom: var(--rule-hair) solid var(--color-divider);
+    align-content: center;
+    align-items: start;
+  }
+
+  .hero__eyebrow {
+    grid-column: 1 / 13;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+    margin-bottom: 1.75rem;
+  }
+
+  .hero__title {
+    grid-column: 1 / 12;
+    font-weight: var(--font-weight-medium);
+    font-size: clamp(2.75rem, 11vw, 8.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+
+  .hero__title span {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-accent);
+    letter-spacing: 0;
+  }
+
+  .hero__sub {
+    grid-column: 1 / 8;
+    margin-top: 2.25rem;
+    color: var(--color-muted);
+    font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+    line-height: 1.55;
+  }
+
+  .hero__facts {
+    grid-column: 9 / 13;
+    align-self: end;
+    margin-top: 2.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono-sm);
+    font-weight: var(--font-weight-mono);
+  }
+
+  .hero__facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: var(--rule-hair) solid var(--color-divider);
+    padding: 0.55rem 0;
+  }
+
+  .hero__facts b {
+    font-weight: 400;
+    color: var(--color-text);
+    text-align: right;
+  }
+
+  .hero__facts span {
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 760px) {
+    .hero__title,
+    .hero__sub,
+    .hero__eyebrow,
+    .hero__facts {
+      grid-column: 1 / 13;
+    }
+
+    .hero__facts {
+      margin-top: 2.5rem;
+    }
+  }
+</style>

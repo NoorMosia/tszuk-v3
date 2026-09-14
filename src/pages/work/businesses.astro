@@ -1,0 +1,144 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ClientCard from '../../components/ClientCard.astro';
+
+const entries = (
+  await getCollection('caseStudies', (e) => e.data.group === 'business')
+).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout
+  title="Businesses | tszuk"
+  description="Companies and organizations tszuk has built brand experiences for."
+>
+  <div class="group-page">
+    <div class="group-page__intro">
+      <p class="group-page__eyebrow">// selected work</p>
+      <h1 class="group-page__title">Businesses</h1>
+    </div>
+
+    {
+      entries.length === 0 ? (
+        <p class="group-page__empty">No business clients to show yet.</p>
+      ) : (
+        <div class="group-page__grid group-page__grid--business">
+          {entries.map((entry, i) => (
+            <ClientCard
+              name={entry.data.name}
+              group={entry.data.group}
+              description={entry.data.description}
+              scope={entry.data.scope}
+              image={entry.data.heroImage}
+              imageAlt={entry.data.heroImageAlt}
+              href={`/work/${entry.id}/`}
+              index={i}
+              fullDescription
+              showScope={false}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Layout>
+
+<script>
+  function initGroupReveal() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cards = document.querySelectorAll<HTMLElement>('.group-page .card.scroll-reveal');
+    if (cards.length === 0) return;
+
+    if (prefersReducedMotion) {
+      cards.forEach((c) => c.classList.add('visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    cards.forEach((card) => {
+      if (card.dataset.revealInit === 'true') return;
+      card.dataset.revealInit = 'true';
+      observer.observe(card);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initGroupReveal);
+</script>
+
+<style>
+  .group-page {
+    background-color: var(--color-bg);
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: calc(var(--section-padding-mobile) + 1rem) 1.5rem var(--section-padding-mobile);
+  }
+
+  .group-page__intro {
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+  }
+
+  .group-page__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .group-page__title {
+    font-size: clamp(2.75rem, 10vw, 6rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 1.25rem;
+  }
+
+  .group-page__lead {
+    font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+    font-weight: var(--font-weight-light);
+    line-height: 1.5;
+    max-width: var(--manifesto-max-width);
+    color: var(--color-muted);
+  }
+
+  .group-page__empty {
+    color: var(--color-muted);
+    font-size: 1rem;
+  }
+
+  .group-page__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 640px) {
+    .group-page__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .group-page {
+      padding: calc(var(--section-padding) + 1rem) 2.5rem var(--section-padding);
+    }
+
+    .group-page__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem 2.5rem;
+    }
+  }
+</style>

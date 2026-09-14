@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>04 — Tactile / textured</title>
+  <style>
+    :root {
+      --bg: #E7E2DA; --surface: #F6F2EB; --ink: #241F19; --muted: #6B635B; --line: #D5CDC1; --accent: #9E4321;
+      --shadow: 0 1px 2px rgba(36,31,25,.04), 0 12px 32px -12px rgba(36,31,25,.22);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: clamp(1.5rem,4vw,3rem); }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: clamp(2rem,6vw,4rem); }
+    header .logo { font-weight: 700; font-size: 1.2rem; }
+    header nav { display: flex; gap: 1.25rem; font-size: .85rem; color: var(--muted); }
+
+    .hero { text-align: center; padding: clamp(2rem,6vw,4rem) 0 clamp(3rem,8vw,5rem); }
+    .hero .eyebrow { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+    .hero h1 { font-weight: 300; font-size: clamp(2.5rem, 8vw, 5.5rem); line-height: 1.05; letter-spacing: -.02em; }
+    .hero h1 b { font-weight: 600; color: var(--accent); }
+    .hero p { max-width: 42ch; margin: 1.5rem auto 0; color: var(--muted); }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.5rem; }
+    .paper {
+      background: var(--surface); border-radius: 14px; padding: 1.75rem; box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.6); transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s;
+    }
+    .paper:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(36,31,25,.05), 0 22px 48px -14px rgba(36,31,25,.3); }
+    .paper .swatch { height: 130px; border-radius: 10px; margin-bottom: 1.25rem; background: linear-gradient(135deg, #d8c3ae, #b98a63); }
+    .paper h2 { font-weight: 500; font-size: 1.2rem; }
+    .paper .cat { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: .35rem 0 .75rem; }
+    .paper p { font-size: .9rem; color: var(--muted); }
+
+    @media (max-width: 620px) { header nav { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="logo">tszuk</span>
+      <nav><span>Work</span><span>About</span><span>Contact</span></nav>
+    </header>
+
+    <div class="hero">
+      <p class="eyebrow">Branding studio · Port Elizabeth</p>
+      <h1>A brand that <b>builds</b>.</h1>
+      <p>Warm, tactile, crafted. Identities that feel like something you can hold.</p>
+    </div>
+
+    <div class="cards">
+      <div class="paper"><div class="swatch"></div><p class="cat">Business</p><h2>Solar Valley Energies</h2><p>Identity &amp; digital system.</p></div>
+      <div class="paper"><div class="swatch"></div><p class="cat">Business</p><h2>The One Room</h2><p>Venue brand experience.</p></div>
+      <div class="paper"><div class="swatch"></div><p class="cat">Business</p><h2>Mendys Online Shop</h2><p>E-commerce that feels like the brand.</p></div>
+    </div>
+  </div>
+</body>
+</html>

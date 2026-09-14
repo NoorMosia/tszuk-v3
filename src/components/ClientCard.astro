@@ -1,0 +1,211 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import ScopeMarker from './ScopeMarker.astro';
+
+interface Props {
+  name: string;
+  group: 'business' | 'personality';
+  description: string;
+  scope: string[];
+  image: ImageMetadata;
+  imageAlt: string;
+  href: string;
+  index?: number;
+  /** Show the full description sentence instead of the truncated single line. */
+  fullDescription?: boolean;
+  /** Render the scope markers. Defaults to true. */
+  showScope?: boolean;
+  /**
+   * Personality-only: render a portrait-tall (3:4) editorial frame instead of
+   * the round portrait. Opt-in so the round treatment stays the default
+   * everywhere it isn't explicitly requested. No effect on business cards.
+   */
+  portrait?: boolean;
+}
+
+const {
+  name,
+  group,
+  description,
+  scope,
+  image,
+  imageAlt,
+  href,
+  index = 0,
+  fullDescription = false,
+  showScope = true,
+  portrait = false,
+} = Astro.props;
+
+// The portrait-tall treatment only applies to personality cards.
+const isPortrait = portrait && group === 'personality';
+
+/**
+ * Hard-cap the description to a single line of at most 120 characters (Req 3.4).
+ * Applied in the component so truncation holds even where CSS clamping is
+ * unavailable; a CSS clamp keeps it to a single visual line as well.
+ */
+function truncate(text: string, max = 120): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= max) return trimmed;
+  return trimmed.slice(0, max - 1).trimEnd() + '…';
+}
+
+const displayDescription = fullDescription ? description.trim() : truncate(description);
+const revealDelay = `${Math.min(index, 6) * 80}ms`;
+---
+
+<a
+  href={href}
+  class:list={['card scroll-reveal', `card--${group}`, { 'card--portrait': isPortrait }]}
+  style={`--reveal-delay: ${revealDelay}`}
+>
+  <div class="card__frame">
+    <Image
+      src={image}
+      alt={imageAlt}
+      width={isPortrait ? 600 : 640}
+      height={isPortrait ? 800 : 640}
+      class="card__image"
+      loading="lazy"
+    />
+  </div>
+  <div class="card__body">
+    <h3 class="card__name">{name}</h3>
+    <p class:list={['card__description', { 'card__description--full': fullDescription }]}>
+      {displayDescription}
+    </p>
+    {
+      showScope && (
+        <ScopeMarker
+          scope={scope}
+          variant="inline"
+          align={group === 'business' ? 'start' : 'center'}
+        />
+      )
+    }
+  </div>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    color: var(--color-text);
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity var(--duration-reveal) var(--easing) var(--reveal-delay, 0ms),
+      transform var(--duration-reveal) var(--easing) var(--reveal-delay, 0ms);
+  }
+
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card__frame {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-sage-tint);
+    aspect-ratio: 1 / 1;
+    width: 100%;
+  }
+
+  /* Business — squarish treatment (0–12px). */
+  .card--business .card__frame {
+    border-radius: 0;
+  }
+
+  /* Personality — round treatment, capped diameter so images do not dominate. */
+  .card--personality .card__frame {
+    border-radius: 50%;
+    max-width: var(--personality-image-max);
+    margin-inline: auto;
+  }
+
+  /* Personality (portrait-tall variant) — editorial 3:4 frame instead of the
+     round portrait. Distinguishes personalities from the square business cards
+     by ASPECT RATIO rather than shape. Opt-in via the `portrait` prop. */
+  .card--portrait .card__frame {
+    border-radius: 4px;
+    aspect-ratio: 3 / 4;
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  /* The portrait variant reads as an editorial column: left-aligned text and
+     scope, like the business cards, but taller imagery. */
+  .card--portrait .card__body {
+    text-align: left;
+  }
+
+  .card--portrait .card__description--full {
+    margin-inline: 0;
+  }
+
+  .card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-hover) var(--easing);
+  }
+
+  .card:hover .card__image {
+    transform: scale(var(--hover-scale));
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .card--business .card__body {
+    text-align: left;
+  }
+
+  .card__name {
+    font-size: 1.4rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.02em;
+  }
+
+  .card__description {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    /* Single line, ellipsised. */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Full description: let the whole sentence wrap, no clamp. */
+  .card__description--full {
+    display: block;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+    overflow: visible;
+    max-width: 42ch;
+    margin-inline: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .card:hover .card__image {
+      transform: none;
+    }
+  }
+</style>

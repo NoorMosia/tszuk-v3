@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="tszuk">
+  <rect width="100" height="100" rx="22" fill="#171512"/>
+  <path transform="translate(30.38 79.39)" d="M34.32 0L23.23 0Q19.80 0 18.08-1.76Q16.37-3.52 16.37-6.69L16.37-38.02L2.64-38.02L2.64-42.77L16.37-42.77L16.37-58.78L21.65-58.78L21.65-42.77L36.61-42.77L36.61-38.02L21.65-38.02L21.65-7.39Q21.65-4.75 24.29-4.75L34.32-4.75"
+    fill="#FDFDFC" stroke="#FDFDFC" stroke-width="5"
+    stroke-linejoin="round" stroke-linecap="round" paint-order="stroke"/>
+</svg>

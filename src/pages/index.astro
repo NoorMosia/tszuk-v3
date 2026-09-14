@@ -1,0 +1,272 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import BusinessRow from '../components/BusinessRow.astro';
+import WorkSection from '../components/WorkSection.astro';
+import ProcessSection from '../components/ProcessSection.astro';
+import FaqSection from '../components/FaqSection.astro';
+import ContactForm from '../components/ContactForm.astro';
+import StructuredData from '../components/StructuredData.astro';
+import Minds from '../components/Minds.astro';
+
+import type { CollectionEntry } from 'astro:content';
+
+const caseStudies = await getCollection('caseStudies');
+const byOrder = (
+  a: CollectionEntry<'caseStudies'>,
+  b: CollectionEntry<'caseStudies'>
+) => a.data.order - b.data.order;
+const businesses = caseStudies
+  .filter((e) => e.data.group === 'business')
+  .sort(byOrder);
+const personalities = caseStudies
+  .filter((e) => e.data.group === 'personality')
+  .sort(byOrder);
+// Landing page shows only the first three personalities (by order); the full
+// set still lives on /work/personalities.
+const homePersonalities = personalities.slice(0, 3);
+---
+
+<Layout title="tszuk | a brand that builds">
+  <StructuredData scope="faq" />
+  <div class="home">
+    <Hero />
+
+    {
+      businesses.length > 0 && (
+        <section class="home-work bleed" aria-labelledby="home-businesses">
+          <div class="home-work__header">
+            <h2 class="home-work__heading" id="home-businesses">Businesses</h2>
+            <span class="home-section__count">selected_work[]</span>
+          </div>
+          <div class="home-work__rows">
+            {businesses.map((entry, i) => (
+              <BusinessRow entry={entry} index={i} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      personalities.length > 0 && (
+        <section class="home-section bleed" aria-labelledby="home-personalities">
+          <div class="home-section__header">
+            <h2 class="home-section__heading" id="home-personalities">Personalities</h2>
+            <span class="home-section__count">individuals &amp; public figures</span>
+          </div>
+          <WorkSection
+            heading="Personalities"
+            viewAllHref="/work/personalities/"
+            entries={homePersonalities}
+            fullDescription
+            showScope={false}
+            headless
+            portrait
+          />
+        </section>
+      )
+    }
+
+    <section class="home-section bleed" aria-labelledby="home-process">
+      <div class="home-section__header">
+        <h2 class="home-section__heading" id="home-process">How We Work</h2>
+      </div>
+      <ProcessSection summary showHeading={false} />
+    </section>
+
+    <section class="home-section bleed" aria-labelledby="home-brand">
+      <div class="home-section__header">
+        <h2 class="home-section__heading" id="home-brand">Behind the Brand</h2>
+      </div>
+      <Minds showTitle={false} />
+    </section>
+
+    <section class="home-section bleed" aria-labelledby="home-faq">
+      <div class="home-section__header">
+        <h2 class="home-section__heading" id="home-faq">Common Questions</h2>
+      </div>
+      <FaqSection showHeading={false} />
+    </section>
+
+    <section class="home-section home-section--last bleed" aria-labelledby="home-contact">
+      <div class="home-section__header">
+        <h2 class="home-section__heading" id="home-contact">Start a Conversation</h2>
+      </div>
+      <p class="home-contact__lead measure">
+        Leave your email and we will reach out. No long forms, no pressure.
+      </p>
+      <ContactForm />
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // Reveal any .scroll-reveal blocks on the home page (business rows, brand
+  // teaser, process, faq). Idempotent and reduced-motion aware; the layout
+  // safety net still guarantees visibility if this fails.
+  function initHomeReveal() {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const els = document.querySelectorAll<HTMLElement>(
+      '.home .scroll-reveal:not(.visible)'
+    );
+    if (els.length === 0) return;
+
+    if (prefersReducedMotion) {
+      els.forEach((el) => el.classList.add('visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    els.forEach((el) => {
+      if (el.dataset.revealInit === 'true') return;
+      el.dataset.revealInit = 'true';
+      observer.observe(el);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initHomeReveal);
+</script>
+
+<style>
+  .home {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-bg);
+  }
+
+  /* Shared section pattern: identical padding, heavy divider, and heading
+     typography for every landing section (Clientele is the reference). */
+  .home-work,
+  .home-section {
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+    border-bottom: var(--rule-hair) solid var(--color-divider);
+  }
+
+  /* Last section carries no divider (footer follows). */
+  .home-section--last {
+    border-bottom: none;
+  }
+
+  .home-work__header,
+  .home-section__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+
+  .home-work__heading,
+  .home-section__heading {
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.02em;
+  }
+
+  .home-work__heading :global(em),
+  .home-section__heading :global(em) {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-accent);
+  }
+
+  .home-section__count {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+
+  .home-work__view-all,
+  .home-section__view-all {
+    font-size: 0.9rem;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  .home-work__view-all span,
+  .home-section__view-all span {
+    display: inline-block;
+    transition: transform var(--duration-hover) var(--easing);
+  }
+
+  .home-work__view-all:hover span,
+  .home-section__view-all:hover span {
+    transform: translateX(4px);
+  }
+
+  /* No line directly under the Clientele heading: drop the first row's top border. */
+  .home-work__rows :global(.brow:first-child) {
+    border-top: none;
+  }
+
+  /* Embedded child sections: the .home-section wrapper owns padding, so the
+     component's own vertical padding is removed to avoid doubling. */
+  .home-section :global(.process),
+  .home-section :global(.faq) {
+    padding-block: 0;
+  }
+
+  /* Minds and the headless Personalities grid: the .home-section wrapper owns
+     padding/width, so drop the component's own padding. Matching padding-top
+     (not margin, so it can't collapse) gives both sections identical vertical
+     spacing below their heading. */
+  .home-section :global(.minds),
+  .home-section :global(.work-section--headless) {
+    padding: 0;
+    padding-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* Behind-the-brand section reveal. */
+  .home-section.scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity var(--duration-reveal) var(--easing),
+      transform var(--duration-reveal) var(--easing);
+  }
+
+  .home-section.scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .home-contact__lead {
+    font-size: 1.05rem;
+    line-height: var(--line-height-body);
+    color: var(--color-text);
+    margin-bottom: 2rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-section.scroll-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .home-work__view-all span,
+    .home-section__view-all span {
+      transition: none;
+    }
+  }
+</style>

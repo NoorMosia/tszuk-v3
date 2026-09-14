@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tszuk — Personalities, square-image options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-bg: #fdfdfc;
+        --color-surface: #f7f5f1;
+        --color-sage: #f0ede7;
+        --color-sage-tint: #f4f2ee;
+        --color-accent: #7c2b24;
+        --color-accent-hover: #611f1a;
+        --color-accent-soft: #b06a5c;
+        --color-text: #171512;
+        --color-divider: #e6e2db;
+        --color-muted: #5c534b;
+        --font-family: 'Space Grotesk', system-ui, sans-serif;
+        --font-display: 'Space Grotesk', system-ui, sans-serif;
+        --font-serif: 'Instrument Serif', Georgia, serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+        --font-weight-medium: 500;
+        --font-weight-bold: 600;
+        --font-size-mono: 0.875rem;
+        --font-size-mono-sm: 0.8125rem;
+        --letter-spacing-mono: 0.02em;
+        --font-weight-mono: 500;
+        --edge: clamp(1rem, 4vw, 2.5rem);
+        --content-max-width: 1200px;
+        --rule-hair: 1px;
+        --easing: cubic-bezier(0.25, 1, 0.5, 1);
+        --duration-hover: 300ms;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: var(--font-family); color: var(--color-text); background: var(--color-bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+      img { display: block; max-width: 100%; height: auto; }
+      a { color: inherit; text-decoration: none; }
+      h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: var(--font-weight-medium); letter-spacing: -0.02em; }
+      em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--color-accent); letter-spacing: 0; }
+
+      .demo-head { max-width: var(--content-max-width); margin: 0 auto; padding: clamp(3rem, 8vw, 6rem) var(--edge) 1rem; }
+      .demo-head h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: var(--font-weight-medium); }
+      .demo-head p { color: var(--color-muted); max-width: 62ch; }
+      .demo-eyebrow { font-family: var(--font-mono); font-size: var(--font-size-mono); font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono); color: var(--color-accent); margin: 0 0 0.75rem; }
+      .option { max-width: var(--content-max-width); margin: 0 auto; padding: clamp(3rem, 7vw, 6rem) var(--edge); border-top: var(--rule-hair) solid var(--color-divider); }
+      .option__tag { font-family: var(--font-mono); font-size: var(--font-size-mono); font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono); color: var(--color-muted); margin: 0 0 0.35rem; }
+      .option__title { font-size: clamp(1.4rem, 3.5vw, 2rem); margin-bottom: 0.5rem; }
+      .option__note { color: var(--color-muted); max-width: 62ch; margin: 0 0 clamp(2rem, 5vw, 3.5rem); font-size: 0.95rem; }
+      .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+      .sec-head__h { font-size: clamp(1.6rem, 4vw, 2.6rem); }
+      .sec-head__count { font-family: var(--font-mono); font-size: var(--font-size-mono); font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono); color: var(--color-muted); }
+      .mono-label { font-family: var(--font-mono); font-size: var(--font-size-mono-sm); font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono); color: var(--color-muted); }
+      .base-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+      @media (min-width: 640px) { .base-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; } }
+      @media (min-width: 900px) { .base-grid { grid-template-columns: repeat(3, 1fr); gap: 3rem 2.5rem; } }
+
+      /* A — Portrait-tall 3:4 */
+      .a-card__frame { aspect-ratio: 3/4; overflow: hidden; background: var(--color-sage-tint); border-radius: 4px; margin-bottom: 1rem; }
+      .a-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .a-card:hover .a-card__frame img { transform: scale(1.04); }
+      .a-card__name { font-size: 1.35rem; margin-bottom: 0.25rem; }
+
+      /* B — Square with name plate inside */
+      .b-card__frame { position: relative; aspect-ratio: 1/1; overflow: hidden; background: var(--color-sage-tint); border-radius: 4px; }
+      .b-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .b-card:hover .b-card__frame img { transform: scale(1.04); }
+      .b-card__plate { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.25rem 1.25rem 1rem; background: linear-gradient(to top, rgba(23,21,18,0.72), transparent); color: var(--color-bg); }
+      .b-card__name { font-size: 1.3rem; color: var(--color-bg); }
+      .b-card__plate .mono-label { color: rgba(253,253,252,0.8); }
+
+      /* C — Offset overlap caption card */
+      .c-card { position: relative; padding-bottom: 2.5rem; }
+      .c-card__frame { aspect-ratio: 1/1; overflow: hidden; background: var(--color-sage-tint); border-radius: 4px; }
+      .c-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .c-card:hover .c-card__frame img { transform: scale(1.04); }
+      .c-card__cap { position: absolute; left: 1rem; bottom: 0; background: var(--color-bg); border: var(--rule-hair) solid var(--color-divider); padding: 0.75rem 1.1rem; max-width: 80%; }
+      .c-card__name { font-family: var(--font-serif); font-style: italic; color: var(--color-accent); font-size: 1.4rem; line-height: 1.1; }
+
+      /* D — Duotone square tiles */
+      .d-card__frame { aspect-ratio: 1/1; overflow: hidden; background: var(--color-accent); border-radius: 4px; margin-bottom: 1rem; }
+      .d-card__frame img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05); mix-blend-mode: luminosity; opacity: 0.92; transition: filter var(--duration-hover) var(--easing), opacity var(--duration-hover) var(--easing), transform var(--duration-hover) var(--easing); }
+      .d-card:hover .d-card__frame img { filter: grayscale(0); opacity: 1; transform: scale(1.04); }
+      .d-card__name { font-size: 1.35rem; margin-bottom: 0.25rem; }
+
+      /* E — Editorial roster with square portrait */
+      .roster { display: flex; flex-direction: column; }
+      .roster__row { display: grid; grid-template-columns: 1fr; gap: 1.5rem 3rem; align-items: center; padding: clamp(2rem, 5vw, 3.5rem) 0; border-top: var(--rule-hair) solid var(--color-divider); }
+      .roster__row:last-child { border-bottom: var(--rule-hair) solid var(--color-divider); }
+      .roster__frame { aspect-ratio: 1/1; overflow: hidden; background: var(--color-sage-tint); border-radius: 4px; max-width: 320px; }
+      .roster__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .roster__row:hover .roster__frame img { transform: scale(1.03); }
+      .roster__name { font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1; margin-bottom: 0.75rem; }
+      .roster__desc { color: var(--color-muted); max-width: 42ch; margin-top: 0.75rem; }
+      @media (min-width: 760px) {
+        .roster__row { grid-template-columns: 320px 1fr; }
+        .roster__row:nth-child(even) { grid-template-columns: 1fr 320px; }
+        .roster__row:nth-child(even) .roster__frame { order: 2; }
+        .roster__row:nth-child(even) .roster__body { order: 1; }
+      }
+
+      /* F — Full-bleed hover-caption tiles */
+      .f-card__frame { position: relative; aspect-ratio: 1/1; overflow: hidden; background: var(--color-sage-tint); border-radius: 4px; }
+      .f-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .f-card:hover .f-card__frame img { transform: scale(1.05); }
+      .f-card__scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(23,21,18,0.6) 0%, transparent 45%); }
+      .f-card__cap { position: absolute; left: 1.1rem; bottom: 1rem; color: var(--color-bg); }
+      .f-card__name { font-size: 1.3rem; color: var(--color-bg); }
+
+      /* G — Framed / matted squares */
+      .g-card__mat { background: var(--color-surface); border: var(--rule-hair) solid var(--color-divider); padding: 0.9rem; border-radius: 2px; margin-bottom: 1rem; }
+      .g-card__frame { aspect-ratio: 1/1; overflow: hidden; background: var(--color-sage-tint); }
+      .g-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .g-card:hover .g-card__frame img { transform: scale(1.04); }
+      .g-card__name { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    </style>
+  </head>
+  <body>
+    <header class="demo-head">
+      <p class="demo-eyebrow">// personalities_section · square_image_options</p>
+      <h1>Personalities with <em>square</em> images.</h1>
+      <p>
+        Landing-page section only, real content, live theme. Note: your design rules
+        currently reserve round for personalities and square for businesses. If
+        personalities go square, each option below keeps them distinct from the
+        business grid a different way (ratio, label, treatment, layout, framing).
+      </p>
+    </header>
+
+    <!-- A -->
+    <section class="option">
+      <p class="option__tag">// option_A · recommended for square</p>
+      <h2 class="option__title">Portrait-tall frames (3:4)</h2>
+      <p class="option__note">Not square-square — a taller editorial portrait ratio. Reads like a shot magazine spread, unmistakably different from the businesses' 1:1 brand shots.</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="base-grid">
+        <a class="a-card"><div class="a-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="a-card__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span></a>
+        <a class="a-card"><div class="a-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="a-card__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span></a>
+      </div>
+    </section>
+
+    <!-- B -->
+    <section class="option">
+      <p class="option__tag">// option_B</p>
+      <h2 class="option__title">Square with name plate inside</h2>
+      <p class="option__note">Name/role sit inside the frame on a soft gradient band. Businesses keep their label below the image, so placement alone keeps the two distinct.</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="base-grid">
+        <a class="b-card"><div class="b-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /><div class="b-card__plate"><div class="b-card__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span></div></div></a>
+        <a class="b-card"><div class="b-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /><div class="b-card__plate"><div class="b-card__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span></div></div></a>
+      </div>
+    </section>
+
+    <!-- C -->
+    <section class="option">
+      <p class="option__tag">// option_C</p>
+      <h2 class="option__title">Offset overlap caption</h2>
+      <p class="option__note">A small paper card overlaps the lower-left corner with the name in serif-italic. Art-directed, adds depth. Distinct by composition.</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="base-grid">
+        <a class="c-card"><div class="c-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="c-card__cap"><div class="c-card__name">Nova Mbeki</div></div></a>
+        <a class="c-card"><div class="c-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="c-card__cap"><div class="c-card__name">Theo Vaughn</div></div></a>
+      </div>
+    </section>
+
+    <!-- D -->
+    <section class="option">
+      <p class="option__tag">// option_D</p>
+      <h2 class="option__title">Warm duotone square tiles</h2>
+      <p class="option__note">Square, with the oxblood wash that unifies mismatched photos and lifts to color on hover. Businesses stay full-color. Distinct by treatment (and hides low-res sources).</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="base-grid">
+        <a class="d-card"><div class="d-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="d-card__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span></a>
+        <a class="d-card"><div class="d-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="d-card__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span></a>
+      </div>
+    </section>
+
+    <!-- E -->
+    <section class="option">
+      <p class="option__tag">// option_E</p>
+      <h2 class="option__title">Editorial roster, square portrait</h2>
+      <p class="option__note">The alternating-row roster, but with a large square portrait instead of a circle. Distinct from businesses by layout (rows vs grid) regardless of image shape.</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="roster">
+        <a class="roster__row"><div class="roster__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="roster__body"><h3 class="roster__name">Nova <em>Mbeki</em></h3><span class="mono-label">Speaker &amp; Author</span><p class="roster__desc">A speaker and author whose ideas moved rooms but got lost the moment people left them.</p></div></a>
+        <a class="roster__row"><div class="roster__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="roster__body"><h3 class="roster__name">Theo <em>Vaughn</em></h3><span class="mono-label">Visual Artist</span><p class="roster__desc">A visual artist with a striking body of work and no space online that did it justice.</p></div></a>
+      </div>
+    </section>
+
+    <!-- F -->
+    <section class="option">
+      <p class="option__tag">// option_F</p>
+      <h2 class="option__title">Full-bleed hover-caption tiles</h2>
+      <p class="option__note">Image fills the tile; name sits over a subtle scrim at the bottom. Immersive and photographic. Distinct by framing.</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="base-grid">
+        <a class="f-card"><div class="f-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /><div class="f-card__scrim"></div><div class="f-card__cap"><div class="f-card__name">Nova Mbeki</div><span class="mono-label" style="color:rgba(253,253,252,0.8)">Speaker &amp; Author</span></div></div></a>
+        <a class="f-card"><div class="f-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /><div class="f-card__scrim"></div><div class="f-card__cap"><div class="f-card__name">Theo Vaughn</div><span class="mono-label" style="color:rgba(253,253,252,0.8)">Visual Artist</span></div></div></a>
+      </div>
+    </section>
+
+    <!-- G -->
+    <section class="option">
+      <p class="option__tag">// option_G</p>
+      <h2 class="option__title">Framed / matted squares</h2>
+      <p class="option__note">Square image inset in a thin paper mat with a hairline border, like a gallery frame. Nods to "we treat the presence like a gallery" — literally Theo's story.</p>
+      <div class="sec-head"><h3 class="sec-head__h">Personalities</h3><span class="sec-head__count">individuals &amp; public figures</span></div>
+      <div class="base-grid">
+        <a class="g-card"><div class="g-card__mat"><div class="g-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div></div><div class="g-card__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span></a>
+        <a class="g-card"><div class="g-card__mat"><div class="g-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div></div><div class="g-card__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span></a>
+      </div>
+    </section>
+  </body>
+</html>

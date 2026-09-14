@@ -1,0 +1,111 @@
+---
+/**
+ * SmoothScroll — smooth scrolling via Lenis.
+ *
+ * Wraps a single Lenis instance and exposes it on `window.__smoothScroll` with
+ * the same shape consumers already read: `current` (smoothed scroll position),
+ * `target` (actual scroll position), `active`, and `enabled`.
+ *
+ * This element is marked transition:persist in the layout, so the instance and
+ * its rAF loop survive Astro view transitions and are never duplicated. The
+ * guard below also prevents a second instance if the script is re-evaluated.
+ *
+ * Disabled when prefers-reduced-motion is active or on touch devices; in that
+ * case native scrolling is used and `current` simply mirrors window.scrollY, so
+ * no content depends on the engine and nothing is hijacked.
+ */
+---
+
+<script>
+  import Lenis from 'lenis';
+
+  interface SmoothScrollApi {
+    readonly current: number;
+    readonly target: number;
+    readonly active: boolean;
+    enabled: boolean;
+    lenis: Lenis | null;
+  }
+
+  function initSmoothScroll() {
+    // Single instance across the whole session (survives view transitions).
+    if ((window as any).__smoothScroll) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const isTouchDevice =
+      'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    // Reduced-motion or touch: no Lenis. Native scroll; current mirrors scrollY.
+    if (prefersReducedMotion || isTouchDevice) {
+      const fallback: SmoothScrollApi = {
+        get current() {
+          return window.scrollY;
+        },
+        get target() {
+          return window.scrollY;
+        },
+        get active() {
+          return false;
+        },
+        enabled: false,
+        lenis: null,
+      };
+      (window as any).__smoothScroll = fallback;
+      return;
+    }
+
+    let lenis: Lenis;
+    try {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+    } catch {
+      // If Lenis fails to start, fall back to native scroll so nothing breaks
+      // (including the scroll-reveal safety net, which reads scrollY directly).
+      const fallback: SmoothScrollApi = {
+        get current() {
+          return window.scrollY;
+        },
+        get target() {
+          return window.scrollY;
+        },
+        get active() {
+          return false;
+        },
+        enabled: false,
+        lenis: null,
+      };
+      (window as any).__smoothScroll = fallback;
+      return;
+    }
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    const api: SmoothScrollApi = {
+      get current() {
+        return lenis.scroll;
+      },
+      get target() {
+        return lenis.targetScroll ?? window.scrollY;
+      },
+      get active() {
+        return Boolean(lenis.isScrolling);
+      },
+      enabled: true,
+      lenis,
+    };
+    (window as any).__smoothScroll = api;
+  }
+
+  // Runs on initial load and after each view transition. The single-instance
+  // guard makes re-runs no-ops, so no duplicate rAF loop is ever created.
+  document.addEventListener('astro:page-load', initSmoothScroll);
+</script>

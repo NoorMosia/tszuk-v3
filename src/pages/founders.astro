@@ -1,0 +1,65 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Minds from '../components/Minds.astro';
+---
+
+<Layout
+  title="Founders | tszuk"
+  description="Meet Zukisa and Tshepo, the co-founders of tszuk, the creative and systems minds behind a brand that builds."
+>
+  <div class="founders">
+    <section class="founders__intro bleed" aria-labelledby="founders-intro">
+      <p class="founders__eyebrow">// the people behind tszuk</p>
+      <h1 class="founders__title" id="founders-intro">The <em>founders.</em></h1>
+    </section>
+
+    <Minds expanded showTitle={false} />
+  </div>
+</Layout>
+
+<style>
+  .founders {
+    background-color: var(--color-bg);
+  }
+
+  /* The intro already provides the gap above the founders, so drop the Minds
+     component's own top padding. */
+  .founders :global(.minds) {
+    padding-top: 0;
+  }
+
+  .founders__intro {
+    padding-block: calc(var(--section-padding-mobile) + 2rem) clamp(4rem, 8vw, 6rem);
+  }
+
+  .founders__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .founders__title {
+    font-size: clamp(2.75rem, 10vw, 6rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 1.75rem;
+  }
+
+  .founders__title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-accent);
+    letter-spacing: 0;
+  }
+
+  @media (min-width: 900px) {
+    .founders__intro {
+      padding-block: calc(var(--section-padding) + 1rem) clamp(4rem, 8vw, 6rem);
+    }
+  }
+</style>

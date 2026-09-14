@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Direction B — Refined Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #FDFDFC;        /* clean near-white */
+      --paper-2: #F4F2EF;      /* warm section wash */
+      --ink: #171512;          /* warm near-black */
+      --muted: #6B625A;        /* warm muted (AA) */
+      --line: #E6E2DB;         /* hairline */
+      --accent: #7C2B24;       /* muted oxblood */
+      --accent-deep: #611F1A;
+      --dark: #171512;
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --edge: clamp(1.25rem, 5vw, 5rem);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--paper); color: var(--ink);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    ::selection { background: var(--accent); color: var(--paper); }
+
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.35rem var(--edge); z-index: 100;
+      backdrop-filter: blur(8px);
+      background: color-mix(in srgb, var(--paper) 74%, transparent);
+      border-bottom: 1px solid transparent; transition: border-color .4s ease;
+    }
+    nav.scrolled { border-color: var(--line); }
+    nav .logo { font-weight: 600; font-size: 1.2rem; letter-spacing: -.02em; }
+    nav .logo b { color: var(--accent); }
+    nav ul { display:flex; gap:2rem; list-style:none; }
+    nav a { color: var(--ink); text-decoration:none; font-family: var(--font-mono); font-size:.74rem; letter-spacing:.02em; }
+    nav a:hover { color: var(--accent); }
+
+    section { padding: clamp(4.5rem,12vh,10rem) var(--edge); }
+
+    .hero { min-height: 100vh; display:flex; flex-direction:column; justify-content:center; }
+    .hero .eyebrow { font-family:var(--font-mono); font-size:.75rem; letter-spacing:.05em; color:var(--accent); margin-bottom:2rem; }
+    .hero h1 { font-weight:500; font-size:clamp(2.7rem,9vw,7.5rem); line-height:.98; letter-spacing:-.03em; max-width:16ch; }
+    .hero h1 .serif { font-family:var(--font-display); font-weight:400; font-style:italic; letter-spacing:0; }
+    .hero .sub { max-width:48ch; color:var(--muted); margin-top:2.5rem; font-size:clamp(1.02rem,1.3vw,1.15rem); }
+    .hero .meta { display:grid; grid-template-columns:repeat(3,auto); gap:2.5rem; margin-top:3.5rem; font-family:var(--font-mono); font-size:.72rem; }
+    .hero .meta span { display:block; color:var(--muted); margin-bottom:.4rem; }
+
+    .section-label { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; padding-bottom:2rem; border-bottom:1px solid var(--line); margin-bottom:3.5rem; }
+    .section-label h2 { font-weight:500; font-size:clamp(1.4rem,3vw,2.2rem); letter-spacing:-.02em; }
+    .section-label h2 em { font-family:var(--font-display); font-style:italic; font-weight:400; color:var(--accent); }
+    .section-label .count { font-family:var(--font-mono); font-size:.72rem; color:var(--muted); }
+
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(1.5rem,4vw,3rem); }
+    .card .frame { aspect-ratio:5/4; border-radius:4px; overflow:hidden; background:var(--paper-2); position:relative; }
+    .card .frame > div { position:absolute; inset:0; background:linear-gradient(135deg,#cbc2b6,#7c2b24 150%); transition:transform .8s cubic-bezier(.25,1,.5,1); }
+    .card:hover .frame > div { transform:scale(1.06); }
+    .card .row { display:flex; justify-content:space-between; align-items:baseline; margin-top:1.1rem; }
+    .card h3 { font-weight:500; font-size:1.3rem; letter-spacing:-.01em; }
+    .card .idx { font-family:var(--font-mono); font-size:.72rem; color:var(--muted); }
+    .card .scope { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem; font-family:var(--font-mono); font-size:.7rem; color:var(--muted); }
+    .card p { color:var(--muted); margin-top:.6rem; font-size:.95rem; max-width:46ch; }
+
+    .wash { background: var(--paper-2); }
+    .people { display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(2rem,5vw,4rem); }
+    .person { text-align:center; }
+    .person .round { width:min(240px,58vw); aspect-ratio:1; border-radius:50%; overflow:hidden; margin:0 auto 1.4rem; background:#e3dbcf; position:relative; }
+    .person .round > div { position:absolute; inset:0; background:radial-gradient(circle at 40% 35%,#d3c8bb,#7c2b24 170%); transition:transform .8s cubic-bezier(.25,1,.5,1); }
+    .person:hover .round > div { transform:scale(1.07); }
+    .person h3 { font-weight:500; font-size:1.25rem; }
+    .person .role { font-family:var(--font-mono); color:var(--muted); font-size:.74rem; margin-top:.4rem; }
+
+    .quote { text-align:center; }
+    .quote blockquote { font-family:var(--font-display); font-weight:400; font-size:clamp(1.8rem,5vw,3.4rem); line-height:1.2; max-width:22ch; margin:0 auto; }
+    .quote blockquote em { font-style:italic; color:var(--accent); }
+    .quote cite { display:block; margin-top:2rem; font-style:normal; font-family:var(--font-mono); font-size:.72rem; color:var(--muted); }
+
+    .cap { display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(1.5rem,3vw,3rem); }
+    .cap .item { border-top:1px solid var(--line); padding-top:1.25rem; }
+    .cap .item .n { font-family:var(--font-mono); font-size:.72rem; color:var(--accent); }
+    .cap .item h4 { font-weight:500; font-size:1.15rem; margin:.85rem 0 .5rem; letter-spacing:-.01em; }
+    .cap .item p { color:var(--muted); font-size:.9rem; }
+
+    footer { background:var(--dark); color:#b7ada2; padding:clamp(4rem,8vh,7rem) var(--edge) 3rem; }
+    footer h2 { color:var(--paper); font-weight:500; font-size:clamp(2rem,6vw,4.2rem); letter-spacing:-.02em; max-width:15ch; }
+    footer h2 em { font-family:var(--font-display); font-style:italic; font-weight:400; color:var(--accent); }
+    footer .mail { display:inline-block; margin-top:1.5rem; color:var(--paper); border-bottom:1px solid var(--accent); padding-bottom:3px; font-size:1.05rem; }
+    footer .base { display:flex; justify-content:space-between; margin-top:4rem; font-family:var(--font-mono); font-size:.72rem; flex-wrap:wrap; gap:1rem; }
+
+    @media (max-width:760px){
+      nav ul { display:none; }
+      .grid, .people, .cap { grid-template-columns:1fr; }
+      .hero .meta { grid-template-columns:1fr 1fr; gap:1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="nav">
+    <span class="logo">tszuk<b>.</b></span>
+    <ul><li><a href="#work">/ work</a></li><li><a href="#people">/ studio</a></li><li><a href="#build">/ build</a></li><li><a href="#contact">/ contact</a></li></ul>
+  </nav>
+
+  <section class="hero">
+    <p class="eyebrow">// branding &amp; technology studio — gqeberha, za</p>
+    <h1>A brand that <span class="serif">builds.</span></h1>
+    <p class="sub">Bespoke identity and UI/UX for aesthetic brands and personalities who value luxury and restraint — engineered by people who can actually build it.</p>
+    <div class="meta">
+      <div><span>founded</span>2026</div>
+      <div><span>clients</span>companies + personalities</div>
+      <div><span>stack</span>brand · ui/ux · systems</div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-label"><h2>Businesses</h2><span class="count">selected_work[]</span></div>
+    <div class="grid">
+      <div class="card">
+        <div class="frame"><div></div></div>
+        <div class="row"><h3>Mendys Online Shop</h3><span class="idx">01</span></div>
+        <div class="scope"><span>brand-identity</span><span>e-commerce</span><span>storytelling</span></div>
+        <p>We treated the shop like a place, not a page — browsing feels like a treat, not a transaction.</p>
+      </div>
+      <div class="card">
+        <div class="frame"><div></div></div>
+        <div class="row"><h3>Solar Valley Energies</h3><span class="idx">02</span></div>
+        <div class="scope"><span>brand-identity</span><span>web</span><span>systems</span></div>
+        <p>A warm, trustworthy face for a technical business people actually want to talk to.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="people" class="wash">
+    <div class="section-label"><h2>Personalities</h2><span class="count">individuals &amp; public figures</span></div>
+    <div class="people">
+      <div class="person"><div class="round"><div></div></div><h3>Nova Mbeki</h3><p class="role">artist</p></div>
+      <div class="person"><div class="round"><div></div></div><h3>Theo Vaughn</h3><p class="role">creative</p></div>
+    </div>
+  </section>
+
+  <section class="quote">
+    <blockquote>A good brand should feel like a good mood. We build ones you actually want to <em>spend time in.</em></blockquote>
+    <cite>// the tszuk approach</cite>
+  </section>
+
+  <section id="build" class="wash">
+    <div class="section-label"><h2>Beautiful, and <em>built to last</em></h2><span class="count">capability[]</span></div>
+    <div class="cap">
+      <div class="item"><div class="n">01</div><h4>Brand &amp; Identity</h4><p>Names, marks, and a voice that sounds like a friend with good taste.</p></div>
+      <div class="item"><div class="n">02</div><h4>Bespoke UI/UX</h4><p>Interfaces designed around the pleasure of use, not just the task.</p></div>
+      <div class="item"><div class="n">03</div><h4>Advanced Systems</h4><p>Real engineering underneath, so the polish you feel is matched by something solid.</p></div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <h2>Let's build something <em>worth remembering.</em></h2>
+    <a class="mail" href="mailto:hello@tszuk.com">hello@tszuk.com ↗</a>
+    <div class="base"><span>tszuk — a brand that builds</span><span>port elizabeth, south africa</span></div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 24));
+  </script>
+</body>
+</html>

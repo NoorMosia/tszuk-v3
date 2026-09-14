@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>05 - Hybrid: warm brutalist-lite x swiss grid</title>
+  <style>
+    :root {
+      --bg: #EDEAE4; --surface: #F6F4EF; --ink: #201C18; --muted: #6B635B;
+      --line: #201C18; --hair: #D9D3C9; --accent: #9E4321;
+      --edge: clamp(1rem, 4vw, 2.5rem);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    .mono { font-family: 'SF Mono', ui-monospace, 'Cascadia Code', monospace; }
+
+    /* BRUTALIST WIDTH: full-bleed edge-to-edge, no centered max-width box.
+       SWISS DISCIPLINE: everything snaps to a 12-col grid with real gutters. */
+    .bleed { width: 100%; padding-inline: var(--edge); }
+    .g12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+
+    /* Header: brutalist hard rule, swiss column alignment */
+    header { border-bottom: 2px solid var(--ink); padding-block: 1rem; align-items: baseline; }
+    header .logo { grid-column: 1 / 4; font-weight: 800; font-size: 1.2rem; letter-spacing: -.02em; }
+    header .tag { grid-column: 4 / 9; align-self: center; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    header .nav { grid-column: 9 / 13; display: flex; gap: 1.5rem; justify-content: flex-end; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+    header .nav a { color: var(--ink); text-decoration: none; }
+    header .nav a:hover { color: var(--accent); }
+
+    /* Hero: brutalist scale, swiss placement + breathing space */
+    .hero { padding-block: clamp(3rem, 12vh, 9rem); border-bottom: 2px solid var(--ink); }
+    .hero .label { grid-column: 1 / 5; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+    .hero h1 { grid-column: 1 / 11; font-weight: 800; font-size: clamp(3rem, 12vw, 9.5rem); line-height: .86; letter-spacing: -.04em; text-transform: uppercase; margin-top: 1.25rem; }
+    .hero h1 span { color: var(--accent); }
+    .hero .sub { grid-column: 1 / 6; margin-top: 2rem; color: var(--muted); font-size: 1.05rem; }
+    .hero .facts { grid-column: 9 / 13; align-self: end; margin-top: 2rem; font-size: .8rem; }
+    .hero .facts div { display: flex; justify-content: space-between; border-top: 1px solid var(--hair); padding: .5rem 0; }
+    .hero .facts b { font-weight: 500; }
+
+    /* Work index: brutalist borders + hover fill, swiss column rhythm + air */
+    .section-label { border-top: 2px solid var(--ink); padding-block: 1rem; }
+    .section-label span { grid-column: 1 / 13; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+
+    .row { grid-column: 1 / 13; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; align-items: center;
+      padding-block: 1.75rem; border-top: 1px solid var(--hair); transition: background .25s, color .25s, padding-inline .25s; }
+    .row:last-child { border-bottom: 2px solid var(--ink); }
+    .row .no { grid-column: 1 / 2; color: var(--accent); font-size: .85rem; }
+    .row .name { grid-column: 2 / 7; font-weight: 800; font-size: clamp(1.4rem, 3vw, 2.4rem); text-transform: uppercase; letter-spacing: -.01em; }
+    .row .desc { grid-column: 7 / 11; color: var(--muted); font-size: .92rem; }
+    .row .cat { grid-column: 11 / 13; text-align: right; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .row:hover { background: var(--accent); color: var(--surface); padding-inline: 1.25rem; }
+    .row:hover .no, .row:hover .desc, .row:hover .cat { color: var(--surface); }
+
+    @media (max-width: 760px) {
+      header .tag { display: none; }
+      header .logo { grid-column: 1 / 7; }
+      header .nav { grid-column: 7 / 13; }
+      .hero h1, .hero .sub, .hero .label, .hero .facts { grid-column: 1 / 13; }
+      .row { grid-template-columns: 1fr; gap: .35rem; }
+      .row .no, .row .name, .row .desc, .row .cat { grid-column: auto; text-align: left; }
+      .row:hover { padding-inline: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bleed g12">
+    <span class="logo">tszuk.</span>
+    <span class="tag mono">Branding studio, Port Elizabeth</span>
+    <nav class="nav"><a href="#">Work</a><a href="#">Studio</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero bleed g12">
+    <p class="label mono">A brand that builds</p>
+    <h1>Brand that <span>builds</span></h1>
+    <p class="sub">We build identities that resonate. For companies and personalities.</p>
+    <div class="facts mono">
+      <div><span>Founded</span><b>2024</b></div>
+      <div><span>Based</span><b>PE, ZA</b></div>
+      <div><span>Clients</span><b>Business + People</b></div>
+    </div>
+  </section>
+
+  <div class="section-label bleed g12"><span class="mono">Selected work / businesses</span></div>
+
+  <div class="bleed g12">
+    <div class="row"><span class="no mono">01</span><span class="name">Solar Valley</span><span class="desc">Identity and digital system for an energy business.</span><span class="cat">Business</span></div>
+    <div class="row"><span class="no mono">02</span><span class="name">The One Room</span><span class="desc">Venue brand experience with street-culture warmth.</span><span class="cat">Business</span></div>
+    <div class="row"><span class="no mono">03</span><span class="name">Mendys Shop</span><span class="desc">E-commerce experience that feels like the brand.</span><span class="cat">Business</span></div>
+  </div>
+</body>
+</html>

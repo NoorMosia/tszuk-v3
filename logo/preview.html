@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tszuk — logo preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fdfdfc;
+        --dark: #171512;
+        --divider: #e6e2db;
+        --muted: #5c534b;
+        --accent: #7c2b24;
+        --mono: 'JetBrains Mono', ui-monospace, monospace;
+        --grotesk: 'Space Grotesk', system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: var(--grotesk);
+        color: var(--dark);
+        background: var(--bg);
+        padding: clamp(1.5rem, 5vw, 4rem);
+      }
+      h1 {
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        font-size: 1.5rem;
+        margin: 0 0 0.25rem;
+      }
+      .sub {
+        font-family: var(--mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+        color: var(--accent);
+        margin: 0 0 2.5rem;
+      }
+      .grid {
+        display: grid;
+        gap: 1.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .cell {
+        border: 1px solid var(--divider);
+        border-radius: 12px;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        min-height: 180px;
+        justify-content: center;
+        align-items: center;
+      }
+      .cell--dark { background: var(--dark); border-color: transparent; }
+      .cell--surface { background: #f7f5f1; }
+      .cell img { width: 100%; max-width: 240px; height: auto; }
+      .cell .mark { width: 84px; }
+      .label {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        color: var(--muted);
+      }
+      .cell--dark .label { color: rgba(253, 253, 252, 0.6); }
+      .sizes { display: flex; align-items: baseline; gap: 2rem; flex-wrap: wrap; }
+      .sizes img { width: auto; }
+      .s1 { height: 24px; } .s2 { height: 40px; } .s3 { height: 72px; }
+    </style>
+  </head>
+  <body>
+    <h1>tszuk logo</h1>
+    <p class="sub">// brand_assets</p>
+
+    <div class="grid">
+      <div class="cell">
+        <img src="./tszuk-logo.svg" alt="tszuk primary logo" />
+        <span class="label">primary · on paper</span>
+      </div>
+
+      <div class="cell cell--surface">
+        <img src="./tszuk-logo.svg" alt="tszuk logo on surface" />
+        <span class="label">primary · on surface</span>
+      </div>
+
+      <div class="cell cell--dark">
+        <img src="./tszuk-logo-light.svg" alt="tszuk light logo" />
+        <span class="label">light · on ink</span>
+      </div>
+
+      <div class="cell">
+        <img src="./tszuk-logo-mono.svg" alt="tszuk single-color logo" />
+        <span class="label">single-color · oxblood</span>
+      </div>
+
+      <div class="cell">
+        <img class="mark" src="./tszuk-mark.svg" alt="tszuk monogram" />
+        <span class="label">monogram · ts.</span>
+      </div>
+
+      <div class="cell">
+        <div class="sizes">
+          <img class="s1" src="./tszuk-logo.svg" alt="tszuk small" />
+          <img class="s2" src="./tszuk-logo.svg" alt="tszuk medium" />
+          <img class="s3" src="./tszuk-logo.svg" alt="tszuk large" />
+        </div>
+        <span class="label">scale check</span>
+      </div>
+    </div>
+
+    <h1 style="margin-top: 3rem;">outlined · font-independent</h1>
+    <p class="sub">// print_safe · no web font required</p>
+
+    <div class="grid">
+      <div class="cell">
+        <img src="./tszuk-logo-outlined.svg" alt="tszuk primary outlined" />
+        <span class="label">primary · outlined</span>
+      </div>
+
+      <div class="cell cell--dark">
+        <img src="./tszuk-logo-light-outlined.svg" alt="tszuk light outlined" />
+        <span class="label">light · outlined</span>
+      </div>
+
+      <div class="cell">
+        <img src="./tszuk-logo-mono-outlined.svg" alt="tszuk single-color outlined" />
+        <span class="label">single-color · outlined</span>
+      </div>
+    </div>
+  </body>
+</html>

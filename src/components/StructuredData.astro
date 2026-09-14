@@ -1,0 +1,105 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import {
+  SITE_DOMAIN,
+  ORG_NAME,
+  ORG_DESCRIPTION,
+  SOCIAL_SAME_AS,
+  FAQ_ITEMS,
+  type FaqItem,
+} from '../lib/site';
+
+interface Props {
+  scope: 'site' | 'case-study' | 'faq';
+  entry?: CollectionEntry<'caseStudies'>;
+  faqItems?: FaqItem[];
+}
+
+const { scope, entry, faqItems = FAQ_ITEMS } = Astro.props;
+
+const SITE_URL = SITE_DOMAIN;
+
+type JsonLd = Record<string, unknown>;
+
+/**
+ * Each builder returns `null` when a required property is missing, so the
+ * component omits the JSON-LD block entirely rather than emitting incomplete
+ * or invalid structured data (Req 8.5, 15.6).
+ */
+function buildOrganization(): JsonLd | null {
+  if (!ORG_NAME || !ORG_DESCRIPTION || !SITE_URL) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: ORG_NAME,
+    description: ORG_DESCRIPTION,
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.png`,
+    image: `${SITE_URL}/og-image.png`,
+    sameAs: SOCIAL_SAME_AS,
+    founder: [
+      { '@type': 'Person', name: 'Zukisa' },
+      { '@type': 'Person', name: 'Mosia' },
+    ],
+  };
+}
+
+function buildPerson(name: string, jobTitle: string): JsonLd | null {
+  if (!name || !jobTitle) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name,
+    jobTitle,
+    worksFor: { '@type': 'Organization', name: ORG_NAME, url: SITE_URL },
+  };
+}
+
+function buildCreativeWork(e?: CollectionEntry<'caseStudies'>): JsonLd | null {
+  if (!e || !e.data.name || !e.data.description) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: e.data.name,
+    description: e.data.description,
+    url: `${SITE_URL}/work/${e.id}`,
+    creator: { '@type': 'Organization', name: ORG_NAME, url: SITE_URL },
+  };
+}
+
+function buildFaqPage(items: FaqItem[]): JsonLd | null {
+  const valid = items.filter((i) => i.question && i.answer);
+  if (valid.length === 0) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: valid.map((i) => ({
+      '@type': 'Question',
+      name: i.question,
+      acceptedAnswer: { '@type': 'Answer', text: i.answer },
+    })),
+  };
+}
+
+let blocks: JsonLd[] = [];
+
+if (scope === 'site') {
+  blocks = [
+    buildOrganization(),
+    buildPerson('Zukisa', 'Co-Founder & Project Manager'),
+    buildPerson('Mosia', 'Co-Founder & Systems Director'),
+  ].filter((b): b is JsonLd => b !== null);
+} else if (scope === 'case-study') {
+  const work = buildCreativeWork(entry);
+  if (work) blocks = [work];
+} else if (scope === 'faq') {
+  const faq = buildFaqPage(faqItems);
+  if (faq) blocks = [faq];
+}
+---
+
+{
+  blocks.map((block) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+  ))
+}

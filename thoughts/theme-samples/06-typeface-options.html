@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>06 - Display typeface options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Google Fonts: free/open-source display candidates + Inter body -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;700;900&family=Bricolage+Grotesque:wght@400;700;800&family=Inter:wght@300;400;700&family=Space+Grotesk:wght@400;700&family=Syne:wght@700;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet" />
+  <!-- Fontshare: Clash Display (free commercial license) -->
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #EDEAE4; --surface: #F6F4EF; --ink: #201C18; --muted: #6B635B;
+      --line: #201C18; --hair: #D9D3C9; --accent: #9E4321;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg); color: var(--ink); line-height: 1.5;
+      padding: clamp(1.25rem, 5vw, 3rem);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1.page { font-family: 'Inter'; font-weight: 300; font-size: 1.5rem; letter-spacing: -.01em; margin-bottom: .5rem; }
+    .intro { color: var(--muted); max-width: 60ch; margin-bottom: 2.5rem; font-size: .95rem; }
+
+    .card {
+      border-top: 2px solid var(--ink);
+      padding: 2rem 0;
+    }
+    .card:last-child { border-bottom: 2px solid var(--ink); }
+    .meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: 'Inter'; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .meta .tag { color: var(--accent); }
+    .display {
+      text-transform: uppercase; line-height: .9; letter-spacing: -.02em;
+      font-size: clamp(2.5rem, 9vw, 6rem);
+    }
+    .display .accent { color: var(--accent); }
+    .row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--hair);
+      font-family: 'Inter';
+    }
+    .row .name { font-weight: 700; font-size: 1.1rem; }
+    .row .cat { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+
+    /* Faces */
+    .f-space   .display { font-family: 'Space Grotesk'; font-weight: 700; }
+    .f-clash   .display { font-family: 'Clash Display'; font-weight: 700; }
+    .f-archivo .display { font-family: 'Archivo'; font-weight: 900; }
+    .f-anton   .display { font-family: 'Anton'; font-weight: 400; letter-spacing: 0; }
+    .f-syne    .display { font-family: 'Syne'; font-weight: 800; }
+    .f-unbound .display { font-family: 'Unbounded'; font-weight: 900; }
+    .f-brico   .display { font-family: 'Bricolage Grotesque'; font-weight: 800; }
+    .f-inter   .display { font-family: 'Inter'; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1 class="page">Display typeface options for tszuk</h1>
+  <p class="intro">Same hybrid header, same warm-greige palette, eight display faces. Body text stays Inter throughout. Free/open faces are on Google Fonts; Clash Display is free-for-commercial on Fontshare. Pick the heading feel you want.</p>
+
+  <div class="card f-space">
+    <div class="meta"><span>Space Grotesk</span><span class="tag">Free / Google Fonts / my pick</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-clash">
+    <div class="meta"><span>Clash Display</span><span class="tag">Free commercial / Fontshare</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-archivo">
+    <div class="meta"><span>Archivo Black (900)</span><span class="tag">Free / Google Fonts</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-anton">
+    <div class="meta"><span>Anton</span><span class="tag">Free / Google Fonts / max impact</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-syne">
+    <div class="meta"><span>Syne (800)</span><span class="tag">Free / Google Fonts / arty</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-unbound">
+    <div class="meta"><span>Unbounded (900)</span><span class="tag">Free / Google Fonts</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-brico">
+    <div class="meta"><span>Bricolage Grotesque (800)</span><span class="tag">Free / Google Fonts / warm</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+
+  <div class="card f-inter">
+    <div class="meta"><span>Inter (700) - the fallback</span><span class="tag">Free / already loaded</span></div>
+    <div class="display">Brand that <span class="accent">builds</span></div>
+    <div class="row"><span class="name">Solar Valley Energies</span><span class="cat">Business</span></div>
+  </div>
+</body>
+</html>

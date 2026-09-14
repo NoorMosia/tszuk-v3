@@ -1,0 +1,157 @@
+---
+/**
+ * Nav — primary navigation.
+ *
+ * Renders plain anchor links, so navigation works with JavaScript disabled.
+ * The active link is computed from the normalized pathname: at most one link is
+ * active, and case-study pages (`/work/{slug}`) leave every top-level link
+ * inactive.
+ *
+ * NOT persisted across View Transitions. The header re-renders fresh on every
+ * navigation, so its markup and styles are always fully present — this avoids
+ * the persisted-node failure mode where a carried-over nav lost its styling
+ * (bulleted list, missing hamburger) after a swap. Because the node is new each
+ * page, element-level listeners are (re)bound on every `astro:page-load`, while
+ * the document/window-level listeners (scroll, Escape, before-swap) bind once
+ * at module scope so they can never stack.
+ *
+ * Styling lives in the `=== Nav ===` section of src/styles/global.css (kept
+ * global so it is robust regardless of transition behaviour).
+ *
+ * Behaviour: the nav is ALWAYS visible and clickable (no scroll-to-reveal
+ * gating); it only swaps its background transparent -> solid/blurred on scroll.
+ */
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/work/businesses/', label: 'Businesses' },
+  { href: '/work/personalities/', label: 'Personalities' },
+  { href: '/founders/', label: 'Founders' },
+  { href: '/about/', label: 'About' },
+];
+
+// Compare paths ignoring a trailing slash so the match is robust either way.
+function normalize(path: string): string {
+  if (path.length > 1 && path.endsWith('/')) return path.slice(0, -1);
+  return path;
+}
+
+const current = normalize(Astro.url.pathname);
+---
+
+<nav class="nav" aria-label="Primary" data-nav>
+  <a href="/" class="nav__brand">tszuk<span>.</span></a>
+  <button
+    type="button"
+    class="nav__toggle"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="nav-menu"
+    data-nav-toggle
+  >
+    <span class="nav__toggle-bar" aria-hidden="true"></span>
+    <span class="nav__toggle-bar" aria-hidden="true"></span>
+    <span class="nav__toggle-bar" aria-hidden="true"></span>
+  </button>
+  <ul class="nav__list" id="nav-menu">
+    {
+      links.map((link) => {
+        const isActive = current === normalize(link.href);
+        return (
+          <li>
+            <a
+              href={link.href}
+              class:list={['nav__link', { 'is-active': isActive }]}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
+
+<script>
+  // The header is re-rendered fresh on every navigation (NOT persisted). So:
+  //  - Element-level wiring (toggle/link clicks, the scrolled-background sync)
+  //    is (re)bound on every `astro:page-load` against the current nav node.
+  //    The previous page's node is discarded with its listeners, so there is
+  //    nothing to double-bind and no guard is needed.
+  //  - Document/window listeners (Escape, scroll, before-swap) are bound ONCE
+  //    at module scope, so navigating between pages never stacks them.
+
+  const strip = (p: string) =>
+    p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
+
+  /** Single source of truth for the mobile menu's open/closed state. */
+  function setMenuOpen(open: boolean) {
+    const nav = document.querySelector<HTMLElement>('.nav');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+    if (!nav || !toggle) return;
+    nav.classList.toggle('nav--open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+
+  function isMenuOpen() {
+    return document.querySelector('.nav')?.classList.contains('nav--open') ?? false;
+  }
+
+  /** Recompute the active link from the live URL. */
+  function updateActiveNav() {
+    const path = strip(window.location.pathname);
+    document.querySelectorAll<HTMLAnchorElement>('.nav__link').forEach((a) => {
+      const isActive = path === strip(a.getAttribute('href') || '');
+      a.classList.toggle('is-active', isActive);
+      if (isActive) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+  }
+
+  /** Reflect scroll position as a solid/blurred background (cosmetic only). */
+  function syncSolid() {
+    const nav = document.querySelector<HTMLElement>('.nav');
+    if (nav) nav.classList.toggle('nav--solid', window.scrollY > 24);
+  }
+
+  // --- Per-navigation wiring: runs on initial load and after every swap. ---
+  function initNav() {
+    const nav = document.querySelector<HTMLElement>('.nav');
+    if (!nav) return;
+
+    // Toggle + link taps via delegation on the (fresh) nav node.
+    nav.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-nav-toggle]')) {
+        setMenuOpen(!isMenuOpen());
+      } else if (target.closest('.nav__link')) {
+        // Link tap: close the menu; the browser handles the navigation.
+        setMenuOpen(false);
+      }
+    });
+
+    updateActiveNav();
+    syncSolid();
+  }
+
+  document.addEventListener('astro:page-load', initNav);
+
+  // --- Document/window listeners: bound once for the whole session. ---
+  if (!(window as any).__navGlobalsBound) {
+    (window as any).__navGlobalsBound = true;
+
+    window.addEventListener('scroll', syncSolid, { passive: true });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isMenuOpen()) {
+        setMenuOpen(false);
+        document.querySelector<HTMLButtonElement>('[data-nav-toggle]')?.focus();
+      }
+    });
+
+    // Defensive: ensure a closed menu before the next page swaps in.
+    document.addEventListener('astro:before-swap', () => setMenuOpen(false));
+  }
+</script>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03 — Swiss / grid-forward</title>
+  <style>
+    :root {
+      --bg: #EDEAE4; --surface: #F6F4EF; --ink: #201C18; --muted: #6B635B; --line: #D9D3C9; --accent: #9E4321;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 1200px; margin: 0 auto; padding: clamp(1.5rem,4vw,3rem); }
+
+    /* 12-col grid */
+    .g12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.25rem; }
+
+    header.g12 { align-items: baseline; padding-bottom: 1rem; border-bottom: 1px solid var(--ink); }
+    header .logo { grid-column: 1 / 4; font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
+    header .n1 { grid-column: 9 / 11; }
+    header .n2 { grid-column: 11 / 13; }
+    header a, header span.link { font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+
+    .hero { margin-top: clamp(3rem, 10vh, 8rem); }
+    .hero .eyebrow { grid-column: 1 / 4; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .hero h1 { grid-column: 1 / 10; font-weight: 500; font-size: clamp(2.25rem, 7vw, 5.5rem); line-height: 1.02; letter-spacing: -.03em; margin-top: .5rem; }
+    .hero .meta { grid-column: 10 / 13; font-size: .82rem; color: var(--muted); align-self: end; }
+    .hero .meta b { color: var(--accent); font-weight: 500; }
+
+    .index { margin-top: clamp(3rem, 8vw, 6rem); }
+    .row { grid-column: 1 / 13; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.25rem; padding: 1.1rem 0; border-top: 1px solid var(--line); align-items: baseline; }
+    .row:last-child { border-bottom: 1px solid var(--line); }
+    .row .no { grid-column: 1 / 2; color: var(--accent); font-size: .85rem; }
+    .row .name { grid-column: 2 / 7; font-size: 1.15rem; font-weight: 500; }
+    .row .desc { grid-column: 7 / 11; color: var(--muted); font-size: .9rem; }
+    .row .cat { grid-column: 11 / 13; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-align: right; }
+
+    @media (max-width: 720px) {
+      .hero h1, .hero .meta, .hero .eyebrow { grid-column: 1 / 13; }
+      .row { grid-template-columns: 1fr; gap: .25rem; }
+      .row .no, .row .name, .row .desc, .row .cat { grid-column: auto; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="g12">
+      <span class="logo">tszuk</span>
+      <span class="n1 link">Work</span>
+      <span class="n2 link">Contact</span>
+    </header>
+
+    <div class="hero g12">
+      <p class="eyebrow">Branding studio — Port Elizabeth, ZA</p>
+      <h1>A brand that builds.</h1>
+      <p class="meta">Identities for companies &amp; personalities.<br><b>Since 2024</b></p>
+    </div>
+
+    <div class="index g12">
+      <div class="row"><span class="no">01</span><span class="name">Solar Valley Energies</span><span class="desc">Identity &amp; digital system</span><span class="cat">Business</span></div>
+      <div class="row"><span class="no">02</span><span class="name">The One Room</span><span class="desc">Venue brand experience</span><span class="cat">Business</span></div>
+      <div class="row"><span class="no">03</span><span class="name">Mendys Online Shop</span><span class="desc">E-commerce brand</span><span class="cat">Business</span></div>
+    </div>
+  </div>
+</body>
+</html>

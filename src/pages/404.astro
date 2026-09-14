@@ -1,0 +1,89 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Not found | tszuk" description="The page you're looking for doesn't exist.">
+  <section class="notfound" aria-labelledby="notfound-title">
+    <p class="notfound__code">404</p>
+    <h1 class="notfound__title" id="notfound-title">This page doesn't exist</h1>
+    <p class="notfound__text">
+      The case study or page you're looking for isn't here. It may have moved, or
+      the link might be off. Let's get you back to something worth seeing.
+    </p>
+    <div class="notfound__actions">
+      <a class="notfound__cta" href="/">Back home</a>
+      <a class="notfound__link" href="/work/businesses/">See our work</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .notfound {
+    max-width: var(--manifesto-max-width);
+    margin: 0 auto;
+    padding: calc(var(--section-padding) + 2rem) 1.5rem var(--section-padding);
+    text-align: center;
+    background-color: var(--color-bg);
+  }
+
+  .notfound__code {
+    font-size: clamp(3rem, 12vw, 6rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .notfound__title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+  }
+
+  .notfound__text {
+    font-size: 1.05rem;
+    line-height: var(--line-height-body);
+    color: var(--color-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .notfound__actions {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .notfound__cta {
+    display: inline-block;
+    padding: 0.875rem 2.25rem;
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-radius: 4px;
+    transition:
+      background-color var(--duration-hover) var(--easing),
+      transform var(--duration-hover) var(--easing);
+  }
+
+  .notfound__cta:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .notfound__link {
+    font-size: 0.9rem;
+    color: var(--color-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notfound__cta:hover {
+      transform: none;
+    }
+  }
+</style>

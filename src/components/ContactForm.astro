@@ -1,0 +1,247 @@
+---
+/**
+ * ContactForm — email-first, static-safe, Supabase-gated contact form.
+ *
+ * Asks only for an email (required) plus an optional message. Progressive
+ * enhancement: a visible mailto fallback is always present, so with JS off the
+ * form degrades to email. With JS on, submissions route through the env-gated
+ * Supabase adapter (or a success + mailto fallback when the adapter is
+ * disabled). The contact address is injected into the client script via a
+ * data- attribute so there is no hardcoded literal.
+ */
+import { CONTACT_EMAIL } from '../lib/site';
+---
+
+<form class="contact-form" novalidate data-contact-email={CONTACT_EMAIL}>
+  <div class="contact-form__field">
+    <label for="contact-email" class="contact-form__label">Email</label>
+    <input
+      type="email"
+      id="contact-email"
+      name="email"
+      required
+      maxlength="254"
+      autocomplete="email"
+      class="contact-form__input"
+      aria-describedby="error-email"
+    />
+    <p class="contact-form__error" id="error-email" data-error-for="email"></p>
+  </div>
+
+  <div class="contact-form__field">
+    <label for="contact-message" class="contact-form__label">
+      Message <span class="contact-form__optional">(optional)</span>
+    </label>
+    <textarea
+      id="contact-message"
+      name="message"
+      maxlength="5000"
+      rows="4"
+      class="contact-form__input contact-form__textarea"
+    ></textarea>
+  </div>
+
+  <button type="submit" class="contact-form__submit">Send</button>
+
+  <div class="contact-form__status" aria-live="polite"></div>
+</form>
+
+<script>
+  import { submitContact, isValidEmail } from '../lib/contact';
+
+  function initContactForm() {
+    const form = document.querySelector('.contact-form') as HTMLFormElement | null;
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    const status = form.querySelector('.contact-form__status') as HTMLElement;
+    const email = form.dataset.contactEmail || '';
+    const mailto = `<a href="mailto:${email}">${email}</a>`;
+
+    function setError(field: string, message: string) {
+      const el = form!.querySelector(`[data-error-for="${field}"]`) as HTMLElement | null;
+      if (el) el.textContent = message;
+    }
+
+    function clearErrors() {
+      form!
+        .querySelectorAll('.contact-form__error')
+        .forEach((el) => (el.textContent = ''));
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors();
+      status.textContent = '';
+      status.className = 'contact-form__status';
+
+      const emailValue = (
+        form.querySelector('[name="email"]') as HTMLInputElement
+      ).value.trim();
+      const message = (
+        form.querySelector('[name="message"]') as HTMLTextAreaElement
+      ).value.trim();
+
+      // Email is the only required field.
+      if (!emailValue) {
+        setError('email', 'Please enter your email.');
+        return;
+      }
+      if (!isValidEmail(emailValue)) {
+        setError('email', 'Please enter a valid email address.');
+        return;
+      }
+
+      const submitBtn = form.querySelector('.contact-form__submit') as HTMLButtonElement;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      try {
+        const result = await submitContact({
+          email: emailValue,
+          message: message || undefined,
+        });
+
+        if (result.status === 'sent') {
+          status.textContent = 'Thanks. We will be in touch shortly.';
+          status.className = 'contact-form__status contact-form__status--success';
+          form.reset();
+        } else if (result.status === 'fallback') {
+          status.innerHTML = `Thanks! Please also reach us at ${mailto}.`;
+          status.className = 'contact-form__status contact-form__status--success';
+          form.reset();
+        } else {
+          // error — retain entered values, offer mailto fallback.
+          status.innerHTML = `Your message could not be sent. Please email us at ${mailto}.`;
+          status.className = 'contact-form__status contact-form__status--error';
+        }
+      } catch {
+        status.innerHTML = `Your message could not be sent. Please email us at ${mailto}.`;
+        status.className = 'contact-form__status contact-form__status--error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send';
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initContactForm);
+</script>
+
+<style>
+  .contact-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem 2rem;
+    width: 100%;
+  }
+
+  /* Wider screens: email and message sit side by side to use the full width,
+     with the button and status spanning below. */
+  @media (min-width: 768px) {
+    .contact-form {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+
+    .contact-form__submit,
+    .contact-form__status {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contact-form__label {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    color: var(--color-text);
+    letter-spacing: var(--letter-spacing-mono);
+  }
+
+  .contact-form__optional {
+    color: var(--color-muted);
+  }
+
+  .contact-form__input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-divider);
+    padding: 0.75rem 0;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--color-text);
+    transition: border-color var(--duration-hover) var(--easing);
+  }
+
+  .contact-form__input:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-accent);
+  }
+
+  .contact-form__textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .contact-form__error {
+    font-size: 0.8rem;
+    color: var(--color-error);
+    min-height: 1em;
+    margin: 0;
+  }
+
+  .contact-form__submit {
+    align-self: flex-start;
+    padding: 0.875rem 2.25rem;
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-radius: 4px;
+    transition:
+      background-color var(--duration-hover) var(--easing),
+      transform var(--duration-hover) var(--easing);
+  }
+
+  .contact-form__submit:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .contact-form__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .contact-form__status {
+    font-size: 0.9rem;
+    min-height: 1.4em;
+  }
+
+  .contact-form__status a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .contact-form__status--success {
+    color: var(--color-accent);
+  }
+
+  .contact-form__status--error {
+    color: var(--color-error);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-form__submit:hover {
+      transform: none;
+    }
+  }
+</style>

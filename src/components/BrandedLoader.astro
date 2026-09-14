@@ -1,0 +1,117 @@
+---
+/**
+ * BrandedLoader — a subtle branded indicator shown only when a client-side
+ * navigation exceeds 400ms. A 400ms timer starts on `astro:before-preparation`;
+ * the loader is cleared on `astro:after-swap` / `astro:page-load` and on
+ * navigation error/abort. Idle: aria-hidden. Active: role="status" +
+ * aria-live="polite". Inert with JS off; respects reduced motion.
+ */
+---
+
+<div id="branded-loader" class="loader" aria-hidden="true" data-active="false">
+  <div class="loader__bar" aria-hidden="true"></div>
+  <span class="loader__label">Loading…</span>
+</div>
+
+<script>
+  (function initBrandedLoader() {
+    const loader = document.getElementById('branded-loader');
+    if (!loader) return;
+    // Guard against double-binding when the script re-runs.
+    if ((window as any).__brandedLoaderBound) return;
+    (window as any).__brandedLoaderBound = true;
+
+    let timer: number | undefined;
+
+    function show() {
+      loader!.setAttribute('data-active', 'true');
+      loader!.setAttribute('role', 'status');
+      loader!.setAttribute('aria-live', 'polite');
+      loader!.removeAttribute('aria-hidden');
+    }
+
+    function hide() {
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        timer = undefined;
+      }
+      loader!.setAttribute('data-active', 'false');
+      loader!.setAttribute('aria-hidden', 'true');
+      loader!.removeAttribute('role');
+      loader!.removeAttribute('aria-live');
+    }
+
+    document.addEventListener('astro:before-preparation', () => {
+      if (timer !== undefined) clearTimeout(timer);
+      timer = window.setTimeout(show, 400);
+    });
+
+    // Both fire on successful navigation; either clears the loader.
+    document.addEventListener('astro:after-swap', hide);
+    document.addEventListener('astro:page-load', hide);
+
+    // Navigation error/abort — stay on current page, clear the loader.
+    window.addEventListener('popstate', hide);
+    window.addEventListener('error', hide);
+  })();
+</script>
+
+<style>
+  .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-hover) var(--easing);
+  }
+
+  .loader[data-active='true'] {
+    opacity: 1;
+  }
+
+  .loader__bar {
+    height: 3px;
+    width: 100%;
+    transform-origin: left;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-accent),
+      transparent
+    );
+    background-size: 40% 100%;
+    background-repeat: no-repeat;
+    animation: loader-slide 1s ease-in-out infinite;
+  }
+
+  .loader__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @keyframes loader-slide {
+    0% {
+      background-position: -40% 0;
+    }
+    100% {
+      background-position: 140% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loader__bar {
+      animation: none;
+      background: var(--color-accent);
+    }
+  }
+</style>

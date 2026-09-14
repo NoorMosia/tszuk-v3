@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tszuk — Personalities section, layout options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* === tszuk Refined Tech tokens (mirrored from global.css) === */
+      :root {
+        --color-bg: #fdfdfc;
+        --color-surface: #f7f5f1;
+        --color-sage: #f0ede7;
+        --color-sage-tint: #f4f2ee;
+        --color-accent: #7c2b24;
+        --color-accent-hover: #611f1a;
+        --color-accent-soft: #b06a5c;
+        --color-text: #171512;
+        --color-dark: #171512;
+        --color-divider: #e6e2db;
+        --color-muted: #5c534b;
+
+        --font-family: 'Space Grotesk', system-ui, sans-serif;
+        --font-display: 'Space Grotesk', system-ui, sans-serif;
+        --font-serif: 'Instrument Serif', Georgia, serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+        --font-weight-medium: 500;
+        --font-weight-bold: 600;
+
+        --font-size-mono: 0.875rem;
+        --font-size-mono-sm: 0.8125rem;
+        --letter-spacing-mono: 0.02em;
+        --font-weight-mono: 500;
+
+        --edge: clamp(1rem, 4vw, 2.5rem);
+        --content-max-width: 1200px;
+        --rule-hair: 1px;
+        --easing: cubic-bezier(0.25, 1, 0.5, 1);
+        --duration-hover: 300ms;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: var(--font-family);
+        color: var(--color-text);
+        background: var(--color-bg);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      img { display: block; max-width: 100%; height: auto; }
+      a { color: inherit; text-decoration: none; }
+      h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: var(--font-weight-medium); letter-spacing: -0.02em; }
+      em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--color-accent); letter-spacing: 0; }
+
+      /* === Demo scaffolding === */
+      .demo-head {
+        max-width: var(--content-max-width);
+        margin: 0 auto;
+        padding: clamp(3rem, 8vw, 6rem) var(--edge) 1rem;
+      }
+      .demo-head h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: var(--font-weight-medium); }
+      .demo-head p { color: var(--color-muted); max-width: 60ch; }
+      .demo-eyebrow {
+        font-family: var(--font-mono); font-size: var(--font-size-mono);
+        font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono);
+        color: var(--color-accent); margin: 0 0 0.75rem;
+      }
+
+      .option {
+        max-width: var(--content-max-width);
+        margin: 0 auto;
+        padding: clamp(3rem, 7vw, 6rem) var(--edge);
+        border-top: var(--rule-hair) solid var(--color-divider);
+      }
+      .option__tag {
+        font-family: var(--font-mono); font-size: var(--font-size-mono);
+        font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono);
+        color: var(--color-muted); margin: 0 0 0.35rem;
+      }
+      .option__title { font-size: clamp(1.4rem, 3.5vw, 2rem); margin-bottom: 0.5rem; }
+      .option__note { color: var(--color-muted); max-width: 60ch; margin: 0 0 clamp(2rem, 5vw, 3.5rem); font-size: 0.95rem; }
+
+      /* Shared section header (mirrors the home-section header) */
+      .sec-head {
+        display: flex; flex-wrap: wrap; align-items: baseline;
+        justify-content: space-between; gap: 0.5rem 1rem;
+        margin-bottom: clamp(2rem, 4vw, 3rem);
+      }
+      .sec-head__h { font-size: clamp(1.6rem, 4vw, 2.6rem); }
+      .sec-head__count {
+        font-family: var(--font-mono); font-size: var(--font-size-mono);
+        font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono);
+        color: var(--color-muted);
+      }
+      .mono-label {
+        font-family: var(--font-mono); font-size: var(--font-size-mono-sm);
+        font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono);
+        color: var(--color-muted);
+      }
+
+      /* ============================================================
+         OPTION 0 — CURRENT (baseline): round cards, centered, grid
+         ============================================================ */
+      .cur-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+      @media (min-width: 640px) { .cur-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; } }
+      @media (min-width: 900px) { .cur-grid { grid-template-columns: repeat(3, 1fr); } }
+      .cur-card { text-align: center; }
+      .cur-card__frame {
+        width: min(220px, 60vw); aspect-ratio: 1/1; margin: 0 auto 1.5rem;
+        border-radius: 50%; overflow: hidden; background: var(--color-sage-tint);
+      }
+      .cur-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .cur-card:hover .cur-card__frame img { transform: scale(1.03); }
+      .cur-card__name { font-size: 1.4rem; margin-bottom: 0.4rem; }
+      .cur-card__desc { color: var(--color-muted); font-size: 0.95rem; max-width: 34ch; margin: 0 auto; }
+
+      /* ============================================================
+         OPTION 1 — EDITORIAL ROSTER (alternating full-width rows)
+         ============================================================ */
+      .roster { display: flex; flex-direction: column; }
+      .roster__row {
+        display: grid; grid-template-columns: 1fr; gap: 1.5rem 3rem;
+        align-items: center; padding: clamp(2rem, 5vw, 3.5rem) 0;
+        border-top: var(--rule-hair) solid var(--color-divider);
+      }
+      .roster__row:last-child { border-bottom: var(--rule-hair) solid var(--color-divider); }
+      .roster__portrait {
+        width: min(260px, 66vw); aspect-ratio: 1/1; border-radius: 50%;
+        overflow: hidden; background: var(--color-sage-tint); margin: 0 auto;
+      }
+      .roster__portrait img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .roster__row:hover .roster__portrait img { transform: scale(1.04); }
+      .roster__name { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1; margin-bottom: 0.75rem; }
+      .roster__meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-bottom: 1rem; }
+      .roster__desc { color: var(--color-muted); max-width: 42ch; }
+      @media (min-width: 760px) {
+        .roster__row { grid-template-columns: 260px 1fr; text-align: left; }
+        .roster__portrait { margin: 0; }
+        .roster__row:nth-child(even) { grid-template-columns: 1fr 260px; }
+        .roster__row:nth-child(even) .roster__portrait { order: 2; }
+        .roster__row:nth-child(even) .roster__body { order: 1; }
+      }
+
+      /* ============================================================
+         OPTION 2 — STAGGERED PORTRAITS (gallery rhythm, no JS)
+         ============================================================ */
+      .stagger { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+      @media (min-width: 640px) { .stagger { grid-template-columns: repeat(2, 1fr); gap: 3rem 2.5rem; } }
+      @media (min-width: 900px) { .stagger { grid-template-columns: repeat(4, 1fr); } }
+      .stagger__item { text-align: center; }
+      @media (min-width: 640px) {
+        .stagger__item:nth-child(even) { transform: translateY(clamp(1.5rem, 5vw, 4rem)); }
+      }
+      .stagger__frame {
+        width: 100%; max-width: 220px; aspect-ratio: 1/1; margin: 0 auto 1.25rem;
+        border-radius: 50%; overflow: hidden; background: var(--color-sage-tint);
+      }
+      .stagger__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .stagger__item:hover .stagger__frame img { transform: scale(1.05); }
+      .stagger__name { font-size: 1.3rem; margin-bottom: 0.3rem; }
+
+      /* ============================================================
+         OPTION 3 — HOVER REVEAL (quiet portrait, overlay on hover)
+         ============================================================ */
+      .reveal-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+      @media (min-width: 640px) { .reveal-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (min-width: 900px) { .reveal-grid { grid-template-columns: repeat(3, 1fr); gap: 3rem 2.5rem; } }
+      .reveal-card { text-align: center; }
+      .reveal-card__frame {
+        position: relative; width: min(240px, 64vw); aspect-ratio: 1/1; margin: 0 auto 1.25rem;
+        border-radius: 50%; overflow: hidden; background: var(--color-sage-tint);
+      }
+      .reveal-card__frame img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .reveal-card__overlay {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        text-align: center; padding: 1.5rem; border-radius: 50%;
+        background: color-mix(in srgb, var(--color-accent) 82%, transparent);
+        color: var(--color-bg); opacity: 0; transform: scale(0.9);
+        transition: opacity var(--duration-hover) var(--easing), transform var(--duration-hover) var(--easing);
+      }
+      .reveal-card__frame:hover .reveal-card__overlay,
+      .reveal-card:focus-within .reveal-card__overlay { opacity: 1; transform: scale(1); }
+      .reveal-card__frame:hover img { transform: scale(1.06); }
+      .reveal-card__quote { font-family: var(--font-serif); font-style: italic; font-size: 1.1rem; line-height: 1.3; }
+      .reveal-card__name { font-size: 1.35rem; margin-bottom: 0.3rem; }
+
+      /* ============================================================
+         OPTION 4 — DUOTONE / WARM WASH (unifying treatment)
+         Layered onto a simple grid; hover lifts to full color.
+         ============================================================ */
+      .duo-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+      @media (min-width: 640px) { .duo-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (min-width: 900px) { .duo-grid { grid-template-columns: repeat(3, 1fr); gap: 3rem 2.5rem; } }
+      .duo-card { text-align: center; }
+      .duo-card__frame {
+        position: relative; width: min(240px, 64vw); aspect-ratio: 1/1; margin: 0 auto 1.25rem;
+        border-radius: 50%; overflow: hidden; background: var(--color-accent);
+      }
+      .duo-card__frame img {
+        width: 100%; height: 100%; object-fit: cover;
+        filter: grayscale(1) contrast(1.05);
+        mix-blend-mode: luminosity; opacity: 0.92;
+        transition: filter var(--duration-hover) var(--easing), opacity var(--duration-hover) var(--easing), transform var(--duration-hover) var(--easing);
+      }
+      .duo-card__frame:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.04); }
+      .duo-card__name { font-size: 1.35rem; margin-bottom: 0.3rem; }
+
+      /* ============================================================
+         OPTION 5 — NUMBERED INDEX (typographic list + thumb)
+         ============================================================ */
+      .index { border-top: var(--rule-hair) solid var(--color-divider); }
+      .index__row {
+        display: grid; grid-template-columns: auto 56px 1fr; align-items: center;
+        gap: 1rem 1.5rem; padding: clamp(1.25rem, 3vw, 2rem) 0;
+        border-bottom: var(--rule-hair) solid var(--color-divider);
+        transition: padding-left var(--duration-hover) var(--easing);
+      }
+      .index__row:hover { padding-left: 0.5rem; }
+      .index__num { font-family: var(--font-mono); font-size: var(--font-size-mono); font-weight: var(--font-weight-mono); color: var(--color-accent); }
+      .index__thumb { width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: var(--color-sage-tint); }
+      .index__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-hover) var(--easing); }
+      .index__row:hover .index__thumb img { transform: scale(1.08); }
+      .index__name { font-size: clamp(1.3rem, 3vw, 1.9rem); }
+      .index__role { font-family: var(--font-mono); font-size: var(--font-size-mono-sm); font-weight: var(--font-weight-mono); letter-spacing: var(--letter-spacing-mono); color: var(--color-muted); }
+      .index__meta { display: flex; flex-direction: column; gap: 0.25rem; }
+    </style>
+  </head>
+
+  <body>
+    <header class="demo-head">
+      <p class="demo-eyebrow">// personalities_section · layout_options</p>
+      <h1>Ways to show the <em>personalities</em>.</h1>
+      <p>
+        Landing-page section only. Each option uses the real content (Nova Mbeki,
+        Theo Vaughn) and the live tszuk theme. Resize the window to check mobile.
+        Option&nbsp;0 is what's on the site now, for reference.
+      </p>
+    </header>
+
+    <!-- OPTION 0 — CURRENT -->
+    <section class="option">
+      <p class="option__tag">// option_0 · current</p>
+      <h2 class="option__title">Round cards, centered, grid</h2>
+      <p class="option__note">What's live today. Clean, but structurally identical to the businesses grid, so personalities don't feel distinct.</p>
+      <div class="sec-head">
+        <h3 class="sec-head__h">Personalities</h3>
+        <span class="sec-head__count">individuals &amp; public figures</span>
+      </div>
+      <div class="cur-grid">
+        <a class="cur-card"><div class="cur-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="cur-card__name">Nova Mbeki</div><p class="cur-card__desc">A speaker and author whose ideas moved rooms but got lost the moment people left them.</p></a>
+        <a class="cur-card"><div class="cur-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="cur-card__name">Theo Vaughn</div><p class="cur-card__desc">A visual artist with a striking body of work and no space online that did it justice.</p></a>
+      </div>
+    </section>
+
+    <!-- OPTION 1 — EDITORIAL ROSTER -->
+    <section class="option">
+      <p class="option__tag">// option_1 · recommended</p>
+      <h2 class="option__title">Editorial roster — alternating rows</h2>
+      <p class="option__note">Full-width rows with the portrait alternating left/right. Reads like a magazine feature, gives each person real presence, and is clearly distinct from the business grid.</p>
+      <div class="sec-head">
+        <h3 class="sec-head__h">Personalities</h3>
+        <span class="sec-head__count">individuals &amp; public figures</span>
+      </div>
+      <div class="roster">
+        <a class="roster__row">
+          <div class="roster__portrait"><img src="./nova.jpg" alt="Nova Mbeki" /></div>
+          <div class="roster__body">
+            <h3 class="roster__name">Nova <em>Mbeki</em></h3>
+            <div class="roster__meta"><span class="mono-label">Speaker &amp; Author</span></div>
+            <p class="roster__desc">A speaker and author whose ideas moved rooms but got lost the moment people left them.</p>
+          </div>
+        </a>
+        <a class="roster__row">
+          <div class="roster__portrait"><img src="./theo.jpg" alt="Theo Vaughn" /></div>
+          <div class="roster__body">
+            <h3 class="roster__name">Theo <em>Vaughn</em></h3>
+            <div class="roster__meta"><span class="mono-label">Visual Artist</span></div>
+            <p class="roster__desc">A visual artist with a striking body of work and no space online that did it justice.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- OPTION 2 — STAGGERED PORTRAITS -->
+    <section class="option">
+      <p class="option__tag">// option_2</p>
+      <h2 class="option__title">Staggered portraits — gallery rhythm</h2>
+      <p class="option__note">Round portraits offset vertically so the row has movement without any animation. Curated, gallery-like. (Shown with 4 to reveal the rhythm.)</p>
+      <div class="sec-head">
+        <h3 class="sec-head__h">Personalities</h3>
+        <span class="sec-head__count">individuals &amp; public figures</span>
+      </div>
+      <div class="stagger">
+        <a class="stagger__item"><div class="stagger__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="stagger__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span></a>
+        <a class="stagger__item"><div class="stagger__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="stagger__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span></a>
+        <a class="stagger__item"><div class="stagger__frame"><img src="./extra1.jpg" alt="Sample" /></div><div class="stagger__name">Amara Cole</div><span class="mono-label">Musician</span></a>
+        <a class="stagger__item"><div class="stagger__frame"><img src="./extra2.jpg" alt="Sample" /></div><div class="stagger__name">Kofi Adjei</div><span class="mono-label">Chef</span></a>
+      </div>
+    </section>
+
+    <!-- OPTION 3 — HOVER REVEAL -->
+    <section class="option">
+      <p class="option__tag">// option_3</p>
+      <h2 class="option__title">Hover reveal — quiet until touched</h2>
+      <p class="option__note">Portraits sit calm; on hover/focus an oxblood overlay fades in with a line from their story. Reuses the founders' overlay pattern. Name is always visible (works without hover).</p>
+      <div class="sec-head">
+        <h3 class="sec-head__h">Personalities</h3>
+        <span class="sec-head__count">individuals &amp; public figures</span>
+      </div>
+      <div class="reveal-grid">
+        <a class="reveal-card" tabindex="0">
+          <div class="reveal-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /><div class="reveal-card__overlay"><span class="reveal-card__quote">"They get it before we've even met."</span></div></div>
+          <div class="reveal-card__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span>
+        </a>
+        <a class="reveal-card" tabindex="0">
+          <div class="reveal-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /><div class="reveal-card__overlay"><span class="reveal-card__quote">"A room built for the work."</span></div></div>
+          <div class="reveal-card__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- OPTION 4 — DUOTONE -->
+    <section class="option">
+      <p class="option__tag">// option_4</p>
+      <h2 class="option__title">Warm duotone — unified photography</h2>
+      <p class="option__note">A consistent warm/oxblood wash makes mismatched photos feel like one brand system, and lifts to full color on hover. Also disguises lower-quality source photos. Can layer onto any option above.</p>
+      <div class="sec-head">
+        <h3 class="sec-head__h">Personalities</h3>
+        <span class="sec-head__count">individuals &amp; public figures</span>
+      </div>
+      <div class="duo-grid">
+        <a class="duo-card"><div class="duo-card__frame"><img src="./nova.jpg" alt="Nova Mbeki" /></div><div class="duo-card__name">Nova Mbeki</div><span class="mono-label">Speaker &amp; Author</span></a>
+        <a class="duo-card"><div class="duo-card__frame"><img src="./theo.jpg" alt="Theo Vaughn" /></div><div class="duo-card__name">Theo Vaughn</div><span class="mono-label">Visual Artist</span></a>
+      </div>
+    </section>
+
+    <!-- OPTION 5 — NUMBERED INDEX -->
+    <section class="option">
+      <p class="option__tag">// option_5</p>
+      <h2 class="option__title">Numbered index — minimal list</h2>
+      <p class="option__note">Typographic and understated: number, small round thumb, name, role. Fast and exclusive-feeling. Best if you want personalities to read as a quiet, curated list.</p>
+      <div class="sec-head">
+        <h3 class="sec-head__h">Personalities</h3>
+        <span class="sec-head__count">individuals &amp; public figures</span>
+      </div>
+      <div class="index">
+        <a class="index__row">
+          <span class="index__num">01</span>
+          <span class="index__thumb"><img src="./nova.jpg" alt="Nova Mbeki" /></span>
+          <span class="index__meta"><span class="index__name">Nova Mbeki</span><span class="index__role">Speaker &amp; Author · Personal Brand</span></span>
+        </a>
+        <a class="index__row">
+          <span class="index__num">02</span>
+          <span class="index__thumb"><img src="./theo.jpg" alt="Theo Vaughn" /></span>
+          <span class="index__meta"><span class="index__name">Theo Vaughn</span><span class="index__role">Visual Artist · Art Direction</span></span>
+        </a>
+      </div>
+    </section>
+  </body>
+</html>

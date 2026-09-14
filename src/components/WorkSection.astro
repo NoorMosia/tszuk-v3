@@ -1,0 +1,193 @@
+---
+import ClientCard from './ClientCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  heading: 'Businesses' | 'Personalities';
+  viewAllHref: string;
+  entries: CollectionEntry<'caseStudies'>[];
+  /** Show the full description sentence on cards instead of a truncated line. */
+  fullDescription?: boolean;
+  /** Render scope markers on cards. Defaults to true. */
+  showScope?: boolean;
+  /** Suppress the section's own heading/header (the page supplies one). */
+  headless?: boolean;
+  /** Personality-only: render cards with the portrait-tall (3:4) frame. */
+  portrait?: boolean;
+}
+
+const {
+  heading,
+  viewAllHref,
+  entries,
+  fullDescription = false,
+  showScope = true,
+  headless = false,
+  portrait = false,
+} = Astro.props;
+const groupLabel = heading.toLowerCase();
+---
+
+<section
+  class:list={['work-section', { 'work-section--headless': headless }]}
+  aria-label={headless ? heading : undefined}
+  aria-labelledby={headless ? undefined : `work-${groupLabel}`}
+>
+  {
+    !headless && (
+      <div class="work-section__header">
+        <h2 class="work-section__heading" id={`work-${groupLabel}`}>{heading}</h2>
+        {entries.length > 0 && (
+          <a class="work-section__view-all" href={viewAllHref}>
+            View all <span aria-hidden="true">→</span>
+          </a>
+        )}
+      </div>
+    )
+  }
+
+  {
+    entries.length === 0 ? (
+      <p class="work-section__empty">No {groupLabel} clients to show yet.</p>
+    ) : (
+      <div class:list={['work-section__grid', `work-section__grid--${groupLabel}`]}>
+        {entries.map((entry, i) => (
+          <ClientCard
+            name={entry.data.name}
+            group={entry.data.group}
+            description={entry.data.description}
+            scope={entry.data.scope}
+            image={entry.data.heroImage}
+            imageAlt={entry.data.heroImageAlt}
+            href={`/work/${entry.id}/`}
+            index={i}
+            fullDescription={fullDescription}
+            showScope={showScope}
+            portrait={portrait}
+          />
+        ))}
+      </div>
+    )
+  }
+</section>
+
+<script>
+  // Idempotent scroll-reveal for cards within work sections.
+  function initWorkReveal() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cards = document.querySelectorAll<HTMLElement>(
+      '.work-section .card.scroll-reveal'
+    );
+    if (cards.length === 0) return;
+
+    if (prefersReducedMotion) {
+      cards.forEach((c) => c.classList.add('visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    cards.forEach((card) => {
+      if (card.dataset.revealInit === 'true') return;
+      card.dataset.revealInit = 'true';
+      observer.observe(card);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initWorkReveal);
+</script>
+
+<style>
+  .work-section {
+    padding: var(--section-padding-mobile) 1.5rem;
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+  }
+
+  /* Headless: the parent section owns padding/width; render only the grid. */
+  .work-section--headless {
+    padding: 0;
+    max-width: none;
+  }
+
+  .work-section__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .work-section__heading {
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.02em;
+  }
+
+  .work-section__view-all {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-mono);
+    font-weight: var(--font-weight-mono);
+    letter-spacing: var(--letter-spacing-mono);
+    color: var(--color-accent);
+    white-space: nowrap;
+    transition: opacity var(--duration-hover) var(--easing);
+  }
+
+  .work-section__view-all span {
+    display: inline-block;
+    transition: transform var(--duration-hover) var(--easing);
+  }
+
+  .work-section__view-all:hover span {
+    transform: translateX(4px);
+  }
+
+  .work-section__empty {
+    color: var(--color-muted);
+    font-size: 1rem;
+    padding: 1rem 0 2rem;
+  }
+
+  .work-section__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 640px) {
+    .work-section__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .work-section {
+      padding: var(--section-padding) 2.5rem;
+    }
+
+    .work-section__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem 2.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work-section__view-all span {
+      transition: none;
+    }
+  }
+</style>

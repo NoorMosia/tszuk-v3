@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>01 — Editorial / magazine</title>
+  <style>
+    :root {
+      --bg: #EDEAE4; --surface: #F6F4EF; --ink: #201C18; --muted: #6B635B; --line: #D9D3C9; --accent: #9E4321;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 1240px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem); }
+    header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 1rem; }
+    header .logo { font-family: Georgia, serif; font-size: 1.4rem; letter-spacing: -.01em; }
+    header nav { display: flex; gap: 1.5rem; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+    header a { color: var(--muted); text-decoration: none; }
+    header a:hover { color: var(--accent); }
+
+    /* Asymmetric editorial hero */
+    .masthead { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; margin-top: clamp(2rem, 6vw, 5rem); align-items: end; }
+    .masthead h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: clamp(2.5rem, 8vw, 6rem); line-height: .95; letter-spacing: -.02em; }
+    .masthead h1 em { font-style: italic; color: var(--accent); }
+    .masthead .deck { color: var(--muted); font-size: 1.05rem; border-left: 2px solid var(--accent); padding-left: 1rem; }
+
+    .rule { height: 1px; background: var(--line); margin: clamp(2rem, 6vw, 4rem) 0; }
+
+    /* Feature: big number + hairline */
+    .feature { display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: baseline; padding: 1.75rem 0; border-top: 1px solid var(--line); }
+    .feature:last-child { border-bottom: 1px solid var(--line); }
+    .feature .no { font-family: Georgia, serif; font-size: 1.5rem; color: var(--accent); }
+    .feature h2 { font-family: Georgia, serif; font-weight: 400; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+    .feature p { color: var(--muted); font-size: .95rem; max-width: 40ch; }
+    .feature .meta { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+    @media (max-width: 720px) {
+      .masthead, .feature { grid-template-columns: 1fr; }
+      header nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="logo">tszuk</span>
+      <nav><a href="#">Work</a><a href="#">Studio</a><a href="#">Journal</a><a href="#">Contact</a></nav>
+    </header>
+
+    <div class="masthead">
+      <h1>A brand<br>that <em>builds</em>.</h1>
+      <p class="deck">A branding studio in Port Elizabeth. We build identities that resonate — for companies and personalities alike.</p>
+    </div>
+
+    <div class="rule"></div>
+
+    <div class="feature">
+      <span class="no">01</span>
+      <div><h2>Solar Valley Energies</h2><p>Turning a technical business into a brand people trust.</p></div>
+      <span class="meta">Business · 2025</span>
+    </div>
+    <div class="feature">
+      <span class="no">02</span>
+      <div><h2>The One Room</h2><p>A venue identity with street-culture warmth.</p></div>
+      <span class="meta">Business · 2025</span>
+    </div>
+    <div class="feature">
+      <span class="no">03</span>
+      <div><h2>Mendys Online Shop</h2><p>An e-commerce experience that feels like the brand.</p></div>
+      <span class="meta">Business · 2025</span>
+    </div>
+  </div>
+</body>
+</html>

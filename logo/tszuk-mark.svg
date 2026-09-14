@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="tszuk">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&amp;display=swap');
+      .monogram {
+        font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-weight: 600;
+        font-size: 62px;
+        letter-spacing: -0.03em;
+      }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="128" height="128" rx="26" fill="#FDFDFC" stroke="#E6E2DB" stroke-width="1.5" />
+  <text x="21" y="82" class="monogram">
+    <tspan fill="#171512">ts</tspan><tspan fill="#7C2B24">.</tspan>
+  </text>
+</svg>

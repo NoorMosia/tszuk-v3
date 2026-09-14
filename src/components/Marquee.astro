@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets';
+import logo1 from '../assets/marquees/1.png';
+import logo2 from '../assets/marquees/2.png';
+import logo3 from '../assets/marquees/3.png';
+import logo4 from '../assets/marquees/4.png';
+
+const logos = [logo1, logo2, logo3, logo4, logo1, logo2, logo3, logo4];
+---
+
+<section class="marquee" aria-label="Clients we've worked with">
+  <div class="marquee__track">
+    <div class="marquee__icons" aria-hidden="true">
+      {logos.map((logo, i) => (
+        <Image
+          src={logo}
+          alt=""
+          height={120}
+          quality={100}
+          format="png"
+          class="marquee__icon"
+          loading="lazy"
+        />
+      ))}
+    </div>
+    <div class="marquee__icons" aria-hidden="true">
+      {logos.map((logo, i) => (
+        <Image
+          src={logo}
+          alt=""
+          height={120}
+          quality={100}
+          format="png"
+          class="marquee__icon"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee {
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    padding: 3rem 0;
+    background-color: var(--color-surface);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 25s linear infinite;
+  }
+
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  .marquee__icons {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    padding: 0 2rem;
+  }
+
+  .marquee__icon {
+    flex-shrink: 0;
+    width: auto;
+    height: 60px;
+    object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+    }
+  }
+</style>

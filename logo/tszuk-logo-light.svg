@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" role="img" aria-label="tszuk">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&amp;display=swap');
+      .wordmark {
+        font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-weight: 600;
+        font-size: 92px;
+        letter-spacing: -0.02em;
+      }
+      .paper { fill: #FDFDFC; }
+      /* Warm accent tone stays legible against near-black where oxblood goes muddy. */
+      .accent-soft { fill: #B06A5C; }
+    </style>
+  </defs>
+  <text x="24" y="86" class="wordmark">
+    <tspan class="paper">tszuk</tspan><tspan class="accent-soft">.</tspan>
+  </text>
+</svg>

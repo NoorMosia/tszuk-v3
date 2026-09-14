@@ -1,0 +1,398 @@
+/* === Design System Tokens === */
+:root {
+  /* Colors — "Refined Tech" palette: clean warm near-white paper, warm
+     near-black ink, single muted oxblood accent. No green/cyan hue components.
+     Contrast verified against WCAG 2.1 AA. Token names are legacy aliases
+     (sage/white no longer describe their values) — re-valued, not restructured. */
+  --color-bg: #FDFDFC;          /* clean warm near-white page background */
+  --color-surface: #F7F5F1;     /* warm off-white cards/surfaces */
+  --color-white: #FDFDFC;       /* legacy alias -> paper (light text-on-dark) */
+  --color-sage: #F0EDE7;        /* warm section wash */
+  --color-sage-tint: #F4F2EE;   /* lighter warm tint (image frame bg) */
+  --color-accent: #7C2B24;      /* single muted oxblood accent (AA text on paper) */
+  --color-accent-hover: #611F1A;/* darker oxblood for hover states */
+  --color-accent-soft: #B06A5C; /* warm complementary tone (decorative only) */
+  --color-text: #171512;        /* warm near-black body text */
+  --color-dark: #171512;        /* warm near-black (footer bg) */
+  --color-divider: #E6E2DB;     /* warm hairline divider */
+  --color-muted: #5C534B;       /* warm muted text (AA+, comfortable for small mono) */
+  --color-error: #A5342A;       /* semantic error text (AA on paper) */
+
+  /* Typography — grotesque body + headings, high-style serif for italic accent
+     spans only, mono for metadata/labels. Instrument Serif ships weight 400
+     only, so it is NEVER used for full headings (which stay grotesque). */
+  --font-family: 'Space Grotesk', system-ui, sans-serif;      /* body + UI */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;     /* headings (grotesque) */
+  --font-serif: 'Instrument Serif', Georgia, serif;           /* italic accent spans only */
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace; /* labels/metadata */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;      /* grotesque reads heavy; 600 is the new "bold" */
+  --line-height-body: 1.6;
+  --letter-spacing-subtitle: 0.15em;
+  /* Mono metadata sizes — JetBrains Mono runs wide, so these are deliberately
+     larger than a sans equivalent, at weight 500, to stay comfortably legible. */
+  --font-size-mono: 0.875rem;       /* mono labels/metadata (nav, scope, process) */
+  --font-size-mono-sm: 0.8125rem;   /* smaller mono (dense facts columns) */
+  --letter-spacing-mono: 0.02em;    /* subtle tracking so mono breathes */
+  --font-weight-mono: 500;          /* mono labels: medium so small text isn't thin */
+
+  /* Spacing */
+  --section-padding: 120px;
+  --section-padding-mobile: 64px;
+  --content-max-width: 1200px;
+  --manifesto-max-width: 650px;
+  /* Height reserved for the fixed header, so page content clears the nav. */
+  --nav-height: 3.5rem;
+
+  /* Layout system (v2): full-bleed width on a 12-column grid */
+  --edge: clamp(1rem, 4vw, 2.5rem);          /* full-bleed side padding */
+  --reading-measure: 65ch;                    /* narrow prose measure */
+  --grid-gutter: 1.5rem;                       /* 12-col grid gutter */
+  --rule-heavy: 2px;                           /* section boundary rule */
+  --rule-hair: 1px;                            /* row hairline */
+  --personality-image-max: clamp(140px, 18vw, 220px); /* max round portrait diameter */
+
+  /* Motion */
+  --easing: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-reveal: 600ms;
+  --duration-highlight: 400ms;
+  --duration-hover: 300ms;
+  --duration-flip: 0ms;
+  --blob-duration: 15s;
+
+  /* Sizes */
+  --cover-flip-threshold: 300px;
+  --parallax-factor: 0.05;
+  --hover-scale: 1.03;
+
+  /* Smooth Scroll */
+  --smooth-scroll-lerp: 0.09;
+  --smooth-scroll-spring: 0.015;
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-reveal: 0ms;
+    --duration-highlight: 0ms;
+    --duration-hover: 0ms;
+    --blob-duration: 0ms;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* === Base Styles (mobile-first) === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Anchor jumps land below the fixed header, not under it. */
+  scroll-padding-top: var(--nav-height);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Guard against accidental horizontal scroll on small screens (decorative
+     overflow, wide tracks). Vertical scrolling is unaffected. */
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+/* === Layout system utilities (v2) === */
+/* Centered content container matching the original tszuk site width. */
+.bleed {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--edge);
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gutter);
+}
+
+.measure {
+  max-width: var(--reading-measure);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+/* === Focus Indicators === */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* === Lenis smooth scroll === */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* === No-JS Fallback === */
+.no-js .scroll-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* === Nav ===
+   Kept in the GLOBAL stylesheet (not a scoped <style> in Nav.astro) because the
+   header is transition:persist-ed. A persisted node grafted into the next page
+   can lose Astro's per-page scoped-style hash, which would silently break the
+   mobile hamburger and the collapsing menu. Global rules are not hash-scoped,
+   so they keep applying to the persisted nav on every page. */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.625rem 1.5rem;
+  /* Always visible and clickable. Only the background changes on scroll. */
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--duration-hover) var(--easing),
+    border-color var(--duration-hover) var(--easing);
+}
+
+/* Scrolled: solid blurred background lifts the nav off the content. */
+.nav--solid {
+  background-color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--color-divider);
+}
+
+.nav__brand {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  transition: color var(--duration-hover) var(--easing);
+}
+
+.nav__brand span {
+  color: var(--color-accent);
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hamburger toggle: hidden on desktop, shown below the mobile breakpoint. */
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  margin: -10px -10px -10px 0;
+  color: var(--color-text);
+}
+
+.nav__toggle-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transition:
+    transform var(--duration-hover) var(--easing),
+    opacity var(--duration-hover) var(--easing);
+}
+
+/* Animate the bars into an X when the menu is open. */
+.nav--open .nav__toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav--open .nav__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav--open .nav__toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav__link {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-mono);
+  font-weight: var(--font-weight-mono);
+  letter-spacing: var(--letter-spacing-mono);
+  color: var(--color-muted);
+  padding: 0.25rem 0;
+  transition: color var(--duration-hover) var(--easing);
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-hover) var(--easing);
+}
+
+.nav__link:hover {
+  color: var(--color-text);
+}
+
+.nav__link.is-active {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+}
+
+.nav__link.is-active::after {
+  transform: scaleX(1);
+}
+
+@media (min-width: 768px) {
+  .nav {
+    padding: 1rem 2.5rem;
+  }
+
+  .nav__list {
+    gap: 2rem;
+  }
+}
+
+/* Mobile: always solid for a clean, legible bar; links collapse behind a
+   hamburger toggle that reveals a slide-down panel. */
+@media (max-width: 767px) {
+  .nav {
+    flex-wrap: wrap;
+    /* No row-gap: the collapsed list wraps to a second row, and a vertical gap
+       here would leave dead space below the brand/toggle. Keep only the
+       horizontal gap. The open panel adds its own margin-top. */
+    gap: 0 1.5rem;
+    background-color: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom-color: var(--color-divider);
+  }
+
+  .nav__toggle {
+    display: flex;
+  }
+
+  .nav__list {
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    /* Collapsed by default; expands when the toggle is activated. */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--duration-hover) var(--easing);
+  }
+
+  .nav__list > li {
+    width: 100%;
+  }
+
+  .nav--open .nav__list {
+    max-height: 60vh;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: var(--rule-hair) solid var(--color-divider);
+  }
+
+  .nav__link {
+    display: block;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+  }
+
+  /* No-JS: without the toggle handler, show the links as a plain stacked list
+     so navigation always works. */
+  .no-js .nav__list {
+    max-height: 60vh;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: var(--rule-hair) solid var(--color-divider);
+  }
+
+  .no-js .nav__toggle {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav,
+  .nav__brand,
+  .nav__link,
+  .nav__link::after,
+  .nav__toggle-bar,
+  .nav__list {
+    transition: none;
+  }
+}
