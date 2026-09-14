@@ -105,7 +105,10 @@ const revealDelay = `${Math.min(index, 6) * 80}ms`;
     flex-direction: column;
     gap: 1.75rem;
     align-items: flex-start;
-    padding: clamp(2rem, 5vw, 4rem);
+    /* Mobile: minimal horizontal inset so text aligns with the section edge
+       (the .bleed section already owns page padding). Generous padding is
+       restored at the desktop breakpoint below. */
+    padding: clamp(1.25rem, 4vw, 1.75rem) 0 clamp(2rem, 6vw, 3rem);
   }
 
   .brow__name {
@@ -151,6 +154,11 @@ const revealDelay = `${Math.min(index, 6) * 80}ms`;
     .brow {
       grid-template-columns: 1fr 1fr;
       gap: 0;
+    }
+
+    /* Desktop: text shares a row with the image, so restore full inset. */
+    .brow__text {
+      padding: clamp(2rem, 5vw, 4rem);
     }
 
     /* Image left (default source order). */
