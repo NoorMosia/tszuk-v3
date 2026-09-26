@@ -71,16 +71,14 @@ const {
     border-top: var(--rule-hair) solid var(--color-divider);
   }
 
-  /* Mobile-first: a clean single-column stack. The number is a small mono
-     label sitting just above the phase name (no awkward empty left column),
-     then the items list comfortably below. The 3-column desktop layout is
-     layered on at 768px. */
+  /* Mobile-first: number and name on the left (30%), items list on the right (70%). */
   .process__phase {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 30% 1fr;
+    gap: 0.25rem 1rem;
     padding-block: clamp(1.5rem, 3vw, 2.5rem);
     border-bottom: var(--rule-hair) solid var(--color-divider);
+    align-items: baseline;
   }
 
   .process__num {
@@ -89,6 +87,9 @@ const {
     font-weight: var(--font-weight-mono);
     letter-spacing: var(--letter-spacing-mono);
     color: var(--color-accent);
+    grid-column: 1;
+    grid-row: 1;
+    padding-top: 0.35rem;
   }
 
   .process__name {
@@ -96,6 +97,8 @@ const {
     font-weight: var(--font-weight-medium);
     letter-spacing: -0.025em;
     line-height: 1.05;
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .process__items {
@@ -103,8 +106,10 @@ const {
     flex-direction: column;
     gap: 0.4rem;
     list-style: none;
-    margin: 0.75rem 0 0;
+    margin: 0;
     padding: 0;
+    grid-column: 2;
+    grid-row: 1 / 3;
   }
 
   .process__item {
@@ -127,7 +132,6 @@ const {
   @media (min-width: 768px) {
     /* Desktop: restore the 3-column grid (num | name | items). */
     .process__phase {
-      display: grid;
       grid-template-columns: auto minmax(0, 12ch) 1fr;
       column-gap: clamp(1rem, 4vw, 3rem);
       row-gap: 0.75rem;
@@ -135,16 +139,23 @@ const {
     }
 
     .process__num {
+      grid-column: 1;
+      grid-row: 1;
       padding-top: 0.7rem;
+    }
+
+    .process__name {
+      grid-column: 2;
+      grid-row: 1 / 3;
     }
 
     .process__items {
       grid-column: 3;
+      grid-row: 1 / 3;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 0.5rem 1.25rem;
-      margin-top: 0;
       text-align: right;
     }
   }

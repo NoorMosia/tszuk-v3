@@ -98,7 +98,7 @@ export interface FounderSummary {
 
 export const FOUNDERS: FounderSummary[] = [
   { name: 'Zukisa', role: 'Co-Founder & Project Manager' },
-  { name: 'Mosia', role: 'Co-Founder & Systems Director' },
+  { name: 'Mosia', role: 'Co-Founder & Technical Lead' },
 ];
 
 /**

@@ -72,6 +72,14 @@ const { scope, variant = 'inline', align = 'start', class: className } = Astro.p
     display: inline-block;
     color: var(--color-accent);
     margin: 0 0.5rem;
+    /* Hide the middot separator on mobile; show on desktop. */
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .scope__sep {
+      display: inline-block;
+    }
   }
 
   /* Inline: middot-separated run of text. */
@@ -89,16 +97,17 @@ const { scope, variant = 'inline', align = 'start', class: className } = Astro.p
   }
 
   /* Rows: "Scope" label + values, reads like a spec sheet.
-     Mobile-first: stack the label above the values (left-aligned) so the
-     values get the full column width to wrap between items. The side-by-side
-     right-aligned spec-sheet look is layered on at the wider breakpoint. */
+     Mobile-first: 30/70 split (label left, values right) so values get more
+     room to wrap between items. The side-by-side spec-sheet layout with
+     right-aligned values is refined at the wider breakpoint. */
   .scope--rows {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 30% 1fr;
+    gap: 0 1rem;
     border-top: var(--rule-hair) solid var(--color-divider);
     border-bottom: var(--rule-hair) solid var(--color-divider);
     padding: 1rem 0;
+    align-items: baseline;
   }
 
   .scope__label {
@@ -107,6 +116,7 @@ const { scope, variant = 'inline', align = 'start', class: className } = Astro.p
     font-weight: var(--font-weight-mono);
     letter-spacing: var(--letter-spacing-mono);
     color: var(--color-muted);
+    grid-column: 1;
   }
 
   .scope--rows .scope__values {
@@ -115,14 +125,13 @@ const { scope, variant = 'inline', align = 'start', class: className } = Astro.p
     text-align: left;
     /* Wrap between items (spaces around the middots) but never mid-word. */
     line-height: 1.7;
+    grid-column: 2;
   }
 
   @media (min-width: 640px) {
     .scope--rows {
-      display: grid;
       grid-template-columns: auto 1fr;
       gap: 0.75rem 1.25rem;
-      align-items: baseline;
     }
 
     .scope--rows .scope__values {

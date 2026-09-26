@@ -1,11 +1,10 @@
 /**
- * Contact adapter — env-gated and lazy.
+ * Contact adapter — Formspree, env-gated.
  *
- * The Supabase client is guarded behind a dynamic import inside submitContact,
- * so a static build never requires the package unless the adapter is configured.
- * With no env vars set, submitContact returns 'fallback' and never touches the
- * network — enabling the adapter is purely installing @supabase/supabase-js and
- * setting PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY.
+ * Submissions POST as JSON to the Formspree endpoint configured via
+ * PUBLIC_FORMSPREE_ENDPOINT. With that var unset, submitContact returns
+ * 'fallback' and never touches the network, so a static build with no
+ * configuration still degrades cleanly to the mailto link.
  */
 
 export interface ContactSubmission {
@@ -14,16 +13,13 @@ export interface ContactSubmission {
 }
 
 export type ContactResult =
-  | { status: 'sent' } // adapter inserted
+  | { status: 'sent' } // Formspree accepted the submission
   | { status: 'fallback' } // adapter disabled -> success + mailto
-  | { status: 'error'; message: string }; // insert failed -> mailto fallback
+  | { status: 'error'; message: string }; // submission failed -> mailto fallback
 
-/** True only when both Supabase env vars are present. */
+/** True only when the Formspree endpoint is configured. */
 export function isAdapterEnabled(): boolean {
-  return Boolean(
-    import.meta.env.PUBLIC_SUPABASE_URL &&
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-  );
+  return Boolean(import.meta.env.PUBLIC_FORMSPREE_ENDPOINT);
 }
 
 /**
@@ -46,21 +42,24 @@ export function isValidEmail(email: string): boolean {
 export async function submitContact(
   data: ContactSubmission
 ): Promise<ContactResult> {
-  if (!isAdapterEnabled()) return { status: 'fallback' };
+  const endpoint = import.meta.env.PUBLIC_FORMSPREE_ENDPOINT;
+  if (!endpoint) return { status: 'fallback' };
   try {
-    // Lazy dynamic import so the dependency is optional at build time.
-    // The specifier is computed and marked @vite-ignore so the bundler does not
-    // try to resolve @supabase/supabase-js during a static build where the
-    // package is not installed. It is only reached when the adapter is enabled.
-    const pkg = ['@supabase', 'supabase-js'].join('/');
-    const { createClient } = await import(/* @vite-ignore */ pkg);
-    const client = createClient(
-      import.meta.env.PUBLIC_SUPABASE_URL!,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY!
-    );
-    const { error } = await client.from('contact_messages').insert(data);
-    if (error) return { status: 'error', message: error.message };
-    return { status: 'sent' };
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) return { status: 'sent' };
+    // Formspree returns a JSON body with an `errors` array on failure.
+    const body = await response.json().catch(() => null);
+    const message =
+      body?.errors?.map((e: { message: string }) => e.message).join(', ') ||
+      'Message could not be sent.';
+    return { status: 'error', message };
   } catch {
     return { status: 'error', message: 'Message could not be sent.' };
   }

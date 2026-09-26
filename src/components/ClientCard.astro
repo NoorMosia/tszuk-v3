@@ -197,6 +197,12 @@ const revealDelay = `${Math.min(index, 6) * 80}ms`;
     margin-inline: auto;
   }
 
+  /* Business cards on mobile: reduce left margin by 75% (keep 25% of original). */
+  .card--business .card__description--full {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .card {
       opacity: 1;

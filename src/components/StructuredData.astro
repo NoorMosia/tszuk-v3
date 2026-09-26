@@ -87,7 +87,7 @@ if (scope === 'site') {
   blocks = [
     buildOrganization(),
     buildPerson('Zukisa', 'Co-Founder & Project Manager'),
-    buildPerson('Mosia', 'Co-Founder & Systems Director'),
+    buildPerson('Mosia', 'Co-Founder & Technical Lead'),
   ].filter((b): b is JsonLd => b !== null);
 } else if (scope === 'case-study') {
   const work = buildCreativeWork(entry);

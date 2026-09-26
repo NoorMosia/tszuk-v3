@@ -7,7 +7,7 @@
 - We work with two kinds of clients, kept distinct throughout: **businesses** (companies and organizations) and **personalities** (individuals and public figures).
 - Our work spans strategy, visual identity, brand guidelines, art direction, web design and development, UI/UX, e-commerce experience, and campaign and social direction.
 - The focus is the personal touch and the experience, how a brand looks, feels, and shows up wherever people meet it, not the underlying technology.
-- Founded by Zukisa (Co-Founder & Project Manager) and Mosia (Co-Founder & Systems Director).
+- Founded by Zukisa (Co-Founder & Project Manager) and Mosia (Co-Founder & Technical Lead).
 - Based in Port Elizabeth, South Africa. We collaborate with clients wherever they are.
 
 ## Pages

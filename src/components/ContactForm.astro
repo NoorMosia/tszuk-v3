@@ -1,18 +1,29 @@
 ---
 /**
- * ContactForm — email-first, static-safe, Supabase-gated contact form.
+ * ContactForm — email-first, static-safe, Formspree-backed contact form.
  *
  * Asks only for an email (required) plus an optional message. Progressive
- * enhancement: a visible mailto fallback is always present, so with JS off the
- * form degrades to email. With JS on, submissions route through the env-gated
- * Supabase adapter (or a success + mailto fallback when the adapter is
- * disabled). The contact address is injected into the client script via a
- * data- attribute so there is no hardcoded literal.
+ * enhancement: with JS off and the endpoint configured, the form's native
+ * action/method submit directly to Formspree; with the endpoint unset, or as
+ * an always-visible backup, a mailto link is shown. With JS on, submissions
+ * route through the env-gated Formspree adapter (or a success + mailto
+ * fallback when the adapter is disabled). The contact address is injected
+ * into the client script via a data- attribute so there is no hardcoded
+ * literal.
  */
 import { CONTACT_EMAIL } from '../lib/site';
+
+const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_ENDPOINT as
+  | string
+  | undefined;
 ---
 
-<form class="contact-form" novalidate data-contact-email={CONTACT_EMAIL}>
+<form
+  class="contact-form"
+  novalidate
+  data-contact-email={CONTACT_EMAIL}
+  {...formspreeEndpoint ? { action: formspreeEndpoint, method: 'POST' } : {}}
+>
   <div class="contact-form__field">
     <label for="contact-email" class="contact-form__label">Email</label>
     <input
