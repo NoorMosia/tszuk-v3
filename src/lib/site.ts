@@ -37,7 +37,7 @@ export const LOCATION = 'Port Elizabeth, South Africa';
  * handles when available.
  */
 export const SOCIAL_LINKS = {
-  instagram: 'https://instagram.com/tszuk',
+  instagram: 'https://instagram.com/tsz.uk',
   linkedin: 'https://linkedin.com/company/tszuk',
   substack: 'https://tszuk.substack.com',
   whatsapp: `https://wa.me/${CONTACT_PHONE.wa}`,
